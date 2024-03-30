@@ -5,5 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import tech.biblio.BookListing.entities.Post;
 
 @Document(collection = "posts")
-public interface PostRepository extends MongoRepository<Post, String> {
+public interface PostRepository
+        extends MongoRepository<Post, String> {
 }
