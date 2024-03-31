@@ -1,18 +1,30 @@
 package tech.biblio.BookListing.entities;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Date;
 
 public class Comment {
     @MongoId
-    private String userId;
+    private ObjectId userId;
     private String username;
     private String content;
     private Date createdAt;
     private Date updatedAt;
 
-    public Comment(String userId, String username, String content, Date createdAt) {
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", content='" + content + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+
+    public Comment(ObjectId userId, String username, String content, Date createdAt) {
         this.userId = userId;
         this.username = username;
         this.content = content;
@@ -20,11 +32,19 @@ public class Comment {
         this.updatedAt = createdAt;
     }
 
-    public String getUserId() {
+    public Comment(ObjectId userId, String username, String content, Date createdAt, Date updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public ObjectId getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
 
