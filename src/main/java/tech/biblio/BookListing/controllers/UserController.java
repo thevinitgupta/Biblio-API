@@ -50,4 +50,19 @@ public class UserController {
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getUsersByEmail(@PathVariable String email){
+        try {
+            List<User> users = userService.getUsersByEmail(email);
+            if(users.isEmpty()) {
+                return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
+            }
+            return new ResponseEntity<>(users, HttpStatus.FOUND);
+        }catch (Exception e){
+            String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
+            System.out.println(e.getLocalizedMessage());
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

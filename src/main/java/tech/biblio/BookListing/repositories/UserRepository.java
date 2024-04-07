@@ -6,7 +6,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.entities.User;
 
+import java.util.List;
+
 @Document(collection = "user")
 public interface UserRepository
         extends MongoRepository<User, ObjectId> {
+    List<User> findByFirstName(String firstName);
+    List<User> findAllByFirstName(String firstName);
+    List<User> findFirstByEmail(String email);
 }

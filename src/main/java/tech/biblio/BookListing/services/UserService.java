@@ -19,4 +19,12 @@ public class UserService {
     public  List<User> getAll(){
         return userRepository.findAll();
     }
+
+    public List<User> getAllByFirstName(String firstName){
+        return userRepository.findByFirstName(firstName);
+    }
+
+    public List<User> getUsersByEmail(String email) {
+        return  userRepository.findFirstByEmail(email);
+    }
 }
