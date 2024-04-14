@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.controllers;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.entities.User;
+import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.services.PostService;
 import tech.biblio.BookListing.services.UserService;
@@ -76,4 +78,22 @@ public class PostController {
         }
     }
 
+    @PutMapping("id/{email}/{id}")
+    public ResponseEntity<?> updatePost(@RequestBody Post post, @PathVariable String id, @PathVariable String email){
+        try {
+            Post dbPost = postService.getById(id);
+            if(dbPost==null) throw new PostNotFoundException("");
+            System.out.println(post.toString()+" : "+EqualsBuilder.reflectionEquals(dbPost, post, "id"));
+            if(EqualsBuilder.reflectionEquals(dbPost, post, "id")) {
+                return new ResponseEntity<>("Post data same, no changes made", HttpStatus.NO_CONTENT);
+            }
+            dbPost.updateData(post);
+            Post updatedPost = postService.save(dbPost);
+            return new ResponseEntity<>(updatedPost,HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getClass() + ", "+ e.getMessage()  );
+            String message = e instanceof UncategorizedMongoDbException ? "Database Error" : e.getLocalizedMessage();
+            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
