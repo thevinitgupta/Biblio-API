@@ -2,14 +2,15 @@ package tech.biblio.BookListing.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.MongoTransactionException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.repositories.PostRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -18,14 +19,20 @@ public class PostService {
     @Autowired
     private UserService userService;
 
+    @Transactional
     public Post addPost(String email, Post post){
-        User user = userService.getUserByEmail(email);
-        if(user==null) throw new UserNotFoundException("User with Email not Found");
-        System.out.println(user);
-        Post saved = postRepository.save(post);
-        user.getPosts().add(saved);
-        userService.addUser(user);
-        return saved;
+        try {
+            User user = userService.getUserByEmail(email);
+            if(user==null) throw new UserNotFoundException("User with Email not Found");
+            System.out.println(user);
+            Post saved = postRepository.save(post);
+            user.getPosts().add(saved);
+            userService.addUser(user);
+            return saved;
+        } catch (Exception e){
+            System.out.println("Post Saving Transaction Aborted!");
+            throw new RuntimeException("Post not saved");
+        }
     }
 
     public Post save(Post post) {
