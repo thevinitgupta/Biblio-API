@@ -1,7 +1,9 @@
 package tech.biblio.BookListing.services;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.repositories.UserRepository;
 
@@ -24,7 +26,7 @@ public class UserService {
         return userRepository.findByFirstName(firstName);
     }
 
-    public List<User> getUsersByEmail(String email) {
+    public User getUserByEmail(String email) {
         return  userRepository.findFirstByEmail(email);
     }
 }

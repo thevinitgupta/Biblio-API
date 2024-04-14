@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tech.biblio.BookListing.entities.Post;
+import tech.biblio.BookListing.entities.User;
+import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.repositories.PostRepository;
 
 import java.util.ArrayList;
@@ -15,9 +17,17 @@ import java.util.Optional;
 public class PostService {
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserService userService;
 
-    public Post addPost(Post post){
-        return postRepository.save(post);
+    public Post addPost(String email, Post post){
+        User user = userService.getUserByEmail(email);
+        if(user==null) throw new UserNotFoundException("User with Email not Found");
+        System.out.println(user);
+        Post saved = postRepository.save(post);
+        user.getPosts().add(saved);
+        userService.addUser(user);
+        return saved;
     }
 
     public  List<Post> getAll(){
