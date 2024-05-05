@@ -4,6 +4,8 @@ import com.mongodb.MongoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.services.UserService;
@@ -19,12 +21,14 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getUsers(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         try {
-            List<UserDTO> users = userService.getAll();
-            if(users.isEmpty()) {
-                return new ResponseEntity<>("No Users Present", HttpStatus.FOUND);
+            UserDTO user = userService.getUserByEmail(email);
+            if(user==null) {
+                return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
             }
-            return new ResponseEntity<>(users, HttpStatus.FOUND);
+            return new ResponseEntity<>(user, HttpStatus.FOUND);
         }catch (Exception e){
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());

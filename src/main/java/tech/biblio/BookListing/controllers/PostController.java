@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
@@ -25,18 +27,20 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll(){
-        try {
-        return new ResponseEntity<List<Post>>(postService.getAll(), HttpStatus.OK);
-        }catch (Exception e){
-            System.out.println(e.getClass() + ", "+ e.getMessage()  );
-            String message = e instanceof UncategorizedMongoDbException ? "Database Error" : e.getLocalizedMessage();
-            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PostMapping("{email}")
-    public ResponseEntity<?> createPost(@RequestBody Post post, @PathVariable String email){
+//    @GetMapping
+//    public ResponseEntity<?> getAll(){
+//        try {
+//        return new ResponseEntity<List<Post>>(postService.getAll(), HttpStatus.OK);
+//        }catch (Exception e){
+//            System.out.println(e.getClass() + ", "+ e.getMessage()  );
+//            String message = e instanceof UncategorizedMongoDbException ? "Database Error" : e.getLocalizedMessage();
+//            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+    @PostMapping("")
+    public ResponseEntity<?> createPost(@RequestBody Post post){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         System.out.println(post.toString());
         try {
             Post savedPost = postService.addPost(email,post);
@@ -53,8 +57,10 @@ public class PostController {
         }
     }
 
-    @GetMapping("{email}")
-    public ResponseEntity<?> getPostsForUser(@PathVariable String email){
+    @GetMapping
+    public ResponseEntity<?> getPostsForUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         try {
             UserDTO user = userService.getUserByEmail(email);
             if(user==null) throw new UserNotFoundException("");
