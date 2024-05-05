@@ -24,7 +24,8 @@ public class UserService {
     }
     public User updateUser(UserDTO user){
         User dbUser = userRepository.findFirstByEmail(user.getEmail());
-        return userRepository.save(UserMapper.userEntity(user,dbUser));
+        dbUser.setPosts(user.getPosts());
+        return userRepository.save(dbUser);
     }
 
     public  List<UserDTO> getAll(){
@@ -40,6 +41,6 @@ public class UserService {
     }
 
     public void deleteUser(User user){
-        userRepository.delete(user);
+        userRepository.deleteById(user.getId());
     }
 }

@@ -56,7 +56,7 @@ public class AuthController {
             return new ResponseEntity<>("User Not Registered", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         catch (Exception e){
-
+            userService.deleteUser(savedUser);
             String message = e instanceof MongoException ? "Error Saving in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);

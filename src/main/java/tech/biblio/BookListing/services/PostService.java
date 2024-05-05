@@ -3,6 +3,7 @@ package tech.biblio.BookListing.services;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
@@ -17,6 +18,7 @@ public class PostService {
     @Autowired
     private UserService userService;
 
+    @Transactional
     public Post addPost(String email, Post post){
         UserDTO user = userService.getUserByEmail(email);
         if(user==null) throw new UserNotFoundException("User with Email not Found");

@@ -13,6 +13,7 @@ public class UserMapper {
         User user = new User(userDTO.getEmail(), userDTO.getFirstName(), dbUser.getPassword());
         user.setId(dbUser.getId());
         user.setPosts(dbUser.getPosts());
+        System.out.println("User Entity : "+user);
         return user;
     }
 

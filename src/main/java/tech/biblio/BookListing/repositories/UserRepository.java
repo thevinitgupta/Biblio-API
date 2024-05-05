@@ -14,5 +14,4 @@ public interface UserRepository
     List<User> findAllByFirstName(String firstName);
     User findFirstByEmail(String email);
 
-    List<User> findByEmailAndFirstNameIsIgnoreCase(String email, String firstName);
 }
