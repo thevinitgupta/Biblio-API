@@ -3,13 +3,12 @@ package tech.biblio.BookListing.services;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
-import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.repositories.PostRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -19,12 +18,13 @@ public class PostService {
     private UserService userService;
 
     public Post addPost(String email, Post post){
-        User user = userService.getUserByEmail(email);
+        UserDTO user = userService.getUserByEmail(email);
         if(user==null) throw new UserNotFoundException("User with Email not Found");
         System.out.println(user);
         Post saved = postRepository.save(post);
         user.getPosts().add(saved);
-        userService.addUser(user);
+        System.out.println(user.toString());
+        userService.updateUser(user);
         return saved;
     }
 

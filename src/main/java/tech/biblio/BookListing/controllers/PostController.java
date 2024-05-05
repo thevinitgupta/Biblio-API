@@ -1,22 +1,19 @@
 package tech.biblio.BookListing.controllers;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
-import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.services.PostService;
 import tech.biblio.BookListing.services.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -59,7 +56,7 @@ public class PostController {
     @GetMapping("{email}")
     public ResponseEntity<?> getPostsForUser(@PathVariable String email){
         try {
-            User user = userService.getUserByEmail(email);
+            UserDTO user = userService.getUserByEmail(email);
             if(user==null) throw new UserNotFoundException("");
             List<Post> userPosts = user.getPosts();
             if(userPosts!=null && !userPosts.isEmpty()) {
