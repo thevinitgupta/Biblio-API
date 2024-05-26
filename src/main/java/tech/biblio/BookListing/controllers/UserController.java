@@ -22,6 +22,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getUsers(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getName());
         String email = authentication.getName();
         try {
             UserDTO user = userService.getUserByEmail(email);

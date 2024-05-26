@@ -17,7 +17,10 @@ public class UserMapper {
         return user;
     }
 
-    public static AuthenticationUser authUser(User user, String role, PasswordEncoder passwordEncoder){
+    public static AuthenticationUser authUser(
+            User user,
+            String role,
+            PasswordEncoder passwordEncoder){
         AuthenticationUser authenticationUser = new AuthenticationUser();
         authenticationUser.setUsername(user.getEmail());
         authenticationUser.setPassword(passwordEncoder.encode(user.getPassword()));

@@ -26,13 +26,18 @@ public class MongoDBAuthService implements UserDetailsService {
         List<GrantedAuthority> authorityList = null;
         AuthenticationUser user = null;
         List<AuthenticationUser> users = authenticationRepository.findByUsername(username);
-        if (users.isEmpty()) throw new UsernameNotFoundException("User Details not found for user : " + username);
+        if (users.isEmpty())
+            throw new UsernameNotFoundException("User Details not found for user : "
+                    + username);
         else {
             user = users.get(0);
             authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority(user.getRole()));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorityList);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorityList);
 
         /*
         * For Setting Authorities
