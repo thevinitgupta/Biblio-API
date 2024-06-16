@@ -29,15 +29,15 @@ public class UserService {
     }
 
     public  List<UserDTO> getAll(){
-        return userRepository.findAll().stream().map(UserMapper::userDTO).toList();
+        return userRepository.findAll().stream().map(user -> UserMapper.userDTO(user,false)).toList();
     }
 
     public List<UserDTO> getAllByFirstName(String firstName){
-        return userRepository.findByFirstName(firstName).stream().map(UserMapper::userDTO).toList();
+        return userRepository.findByFirstName(firstName).stream().map(user -> UserMapper.userDTO(user,false)).toList();
     }
 
     public UserDTO getUserByEmail(String email) {
-        return  UserMapper.userDTO(userRepository.findFirstByEmail(email));
+        return  UserMapper.userDTO(userRepository.findFirstByEmail(email), false);
     }
 
     public void deleteUser(User user){

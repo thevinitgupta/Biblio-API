@@ -29,7 +29,7 @@ public class UserController {
             if(user==null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
             }
-            return new ResponseEntity<>(user, HttpStatus.FOUND);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }catch (Exception e){
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());

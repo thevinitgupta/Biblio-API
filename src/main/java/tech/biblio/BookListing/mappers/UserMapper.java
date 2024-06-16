@@ -6,8 +6,8 @@ import tech.biblio.BookListing.entities.AuthenticationUser;
 import tech.biblio.BookListing.entities.User;
 
 public class UserMapper {
-    public static  UserDTO userDTO(User user){
-        return new UserDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPosts());
+    public static  UserDTO userDTO(User user, boolean allowPosts){
+        return new UserDTO(user.getEmail(), user.getFirstName(), user.getLastName(), allowPosts ? user.getPosts() : null);
     }
     public static User userEntity(UserDTO userDTO, User dbUser){
         User user = new User(userDTO.getEmail(), userDTO.getFirstName(), dbUser.getPassword());

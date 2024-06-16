@@ -3,6 +3,7 @@ package tech.biblio.BookListing.controllers;
 import com.mongodb.MongoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -55,8 +56,14 @@ public class AuthController {
             userService.deleteUser(savedUser);
             return new ResponseEntity<>("User Not Registered", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        catch (DuplicateKeyException e){
+            return new ResponseEntity<>("User with Email Already Exists",
+                    HttpStatus.BAD_REQUEST);
+        }
         catch (Exception e){
-            userService.deleteUser(savedUser);
+            System.out.println(e.getClass());
+//            if(userService.getUserByEmail(user.getEmail())!=null)
+                userService.deleteUser(savedUser);
             String message = e instanceof MongoException ? "Error Saving in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
