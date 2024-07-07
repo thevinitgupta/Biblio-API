@@ -1,0 +1,6 @@
+#mongodb properties
+#spring.data.mongodb.host=localhost
+#spring.data.mongodb.port=27017
+spring.data.mongodb.uri=mongodb+srv://username:password@cluster0.lhyxzrj.mongodb.net/
+spring.data.mongodb.database=biblio
+spring.data.mongodb.auto-index-creation=true
