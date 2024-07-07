@@ -2,7 +2,7 @@
 
 #### User Authentication
 
-  - [ ] User registration with email.
+  - [x] User registration with email.
   - [ ] Email verification with OTP.
   - [ ] User login/logout functionality.
 
