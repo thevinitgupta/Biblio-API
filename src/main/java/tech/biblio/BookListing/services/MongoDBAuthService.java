@@ -12,6 +12,7 @@ import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MongoDBAuthService implements UserDetailsService {
@@ -31,8 +32,9 @@ public class MongoDBAuthService implements UserDetailsService {
                     + username);
         else {
             user = users.get(0);
-            authorityList = new ArrayList<>();
-            authorityList.add(new SimpleGrantedAuthority(user.getRole()));
+            authorityList = new ArrayList<>(user.getRoles().stream()
+                    .map(role -> new SimpleGrantedAuthority(role.getName()))
+                    .toList());
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

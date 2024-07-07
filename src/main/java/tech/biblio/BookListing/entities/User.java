@@ -30,6 +30,9 @@ public class User implements UserDetails {
     @DBRef
     private List<Post> posts = new ArrayList<>();
 
+    @DBRef
+    public Collection<Role> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>();

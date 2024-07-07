@@ -15,6 +15,7 @@ import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
@@ -34,8 +35,9 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         else {
             AuthenticationUser dbUser = users.get(0);
             if(passwordEncoder.matches(password, dbUser.getPassword())){
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(dbUser.getRole()));
+                List<GrantedAuthority> authorities = new ArrayList<>(dbUser.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        .toList());
                 return new UsernamePasswordAuthenticationToken(username,password,authorities);
             }
             else {

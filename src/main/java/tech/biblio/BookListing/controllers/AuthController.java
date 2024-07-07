@@ -17,6 +17,7 @@ import tech.biblio.BookListing.entities.AuthenticationUser;
 import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.mappers.UserMapper;
 import tech.biblio.BookListing.services.MongoDBAuthService;
+import tech.biblio.BookListing.services.RoleService;
 import tech.biblio.BookListing.services.UserService;
 
 @Controller
@@ -27,6 +28,9 @@ public class AuthController {
 
     @Autowired
     MongoDBAuthService authService;
+
+    @Autowired
+    RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,7 +47,8 @@ public class AuthController {
             return new ResponseEntity<>("No User Passed", HttpStatus.NO_CONTENT);
         }
         try {
-            AuthenticationUser authenticationUser = UserMapper.authUser(user,"", passwordEncoder);
+            user.setRoles(roleService.getRoles("ROLE_USER"));
+            AuthenticationUser authenticationUser = UserMapper.authUser(user,roleService.getRoles("ROLE_USER"), passwordEncoder);
             savedUser = userService.addUser(user);
             AuthenticationUser savedAuthUser = authService.addUser(authenticationUser);
             if(savedAuthUser==null) throw new AuthorizationServiceException("User not created.");
@@ -63,7 +68,9 @@ public class AuthController {
         catch (Exception e){
             System.out.println(e.getClass());
 //            if(userService.getUserByEmail(user.getEmail())!=null)
+            if(savedUser!=null) {
                 userService.deleteUser(savedUser);
+            }
             String message = e instanceof MongoException ? "Error Saving in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,7 +3,11 @@ package tech.biblio.BookListing.mappers;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.entities.User;
+
+import java.util.Collection;
+import java.util.Set;
 
 public class UserMapper {
     public static  UserDTO userDTO(User user, boolean allowPosts){
@@ -19,12 +23,12 @@ public class UserMapper {
 
     public static AuthenticationUser authUser(
             User user,
-            String role,
+            Collection<Role> roles,
             PasswordEncoder passwordEncoder){
         AuthenticationUser authenticationUser = new AuthenticationUser();
         authenticationUser.setUsername(user.getEmail());
         authenticationUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        authenticationUser.setRole(role==null || role.isEmpty() ? "USER" : role);
+        authenticationUser.setRoles(roles);
         return authenticationUser;
     }
 }
