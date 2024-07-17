@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import tech.biblio.BookListing.entities.Privilege;
 import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.filters.CsrfCookieFilter;
+import tech.biblio.BookListing.filters.RequestValidationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -93,7 +94,7 @@ public class SecurityConfig {
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         ))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
-
+                http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
 
 
                 http.authorizeHttpRequests((requests) -> {
