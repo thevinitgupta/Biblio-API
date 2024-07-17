@@ -7,7 +7,6 @@ import tech.biblio.BookListing.entities.Privilege;
 import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.repositories.RoleRepository;
 
-import java.util.Arrays;
 import java.util.Set;
 
 @Component
@@ -17,6 +16,8 @@ public class DataLoader implements CommandLineRunner {
     public RoleRepository roleRepository;
     @Override
     public void run(String... args) throws Exception {
+        try {
+
         Role userRole = new Role("ROLE_USER");
         if(roleRepository.findByName("ROLE_USER")==null) {
             userRole.privileges = Set.of(
@@ -56,6 +57,9 @@ public class DataLoader implements CommandLineRunner {
                     Privilege.UPDATE_COMMENT
             );
             roleRepository.save(adminRole);
+        }
+        }catch (Exception e){
+            System.out.println(e.getLocalizedMessage());
         }
     }
 }

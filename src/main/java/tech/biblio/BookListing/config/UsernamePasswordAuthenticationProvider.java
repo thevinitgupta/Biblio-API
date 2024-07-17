@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.mappers.RoleAuthorityMapper;
 import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
 import java.util.ArrayList;
@@ -35,9 +36,9 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         else {
             AuthenticationUser dbUser = users.get(0);
             if(passwordEncoder.matches(password, dbUser.getPassword())){
-                List<GrantedAuthority> authorities = new ArrayList<>(dbUser.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName()))
-                        .toList());
+                List<GrantedAuthority> authorities = new ArrayList<>(
+                        RoleAuthorityMapper.rolesToAuthority(dbUser.getRoles(),
+                                new ArrayList<>()));
                 return new UsernamePasswordAuthenticationToken(username,password,authorities);
             }
             else {

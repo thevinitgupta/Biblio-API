@@ -1,9 +1,11 @@
 package tech.biblio.BookListing.controllers;
 
 import com.mongodb.MongoException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("user")
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
@@ -22,7 +25,8 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getUsers(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
+//        System.out.println(authentication.getName());
+        log.info("User Logged In with Email {}",authentication.getName());
         String email = authentication.getName();
         try {
             UserDTO user = userService.getUserByEmail(email);
@@ -43,6 +47,7 @@ public class UserController {
     public ResponseEntity<?> getUsersByEmail(@PathVariable String email){
         try {
             UserDTO user = userService.getUserByEmail(email);
+
             if(user==null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
             }

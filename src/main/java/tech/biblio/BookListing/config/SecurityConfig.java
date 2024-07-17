@@ -8,7 +8,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,11 +21,21 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import tech.biblio.BookListing.entities.Privilege;
+import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.filters.CsrfCookieFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableWebSecurity(
+        debug = true
+)
+@EnableMethodSecurity(
+//        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfig {
     private UserDetailsService userDetailsService;
 
@@ -89,7 +101,11 @@ public class SecurityConfig {
             requests.requestMatchers("/health").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
             requests.requestMatchers("/user/**").authenticated();
+//            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
+
             requests.requestMatchers("/posts/**").authenticated();
+
+            requests.requestMatchers("/admin/**").authenticated();
         });
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());

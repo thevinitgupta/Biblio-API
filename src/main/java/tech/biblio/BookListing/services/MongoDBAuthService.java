@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.mappers.RoleAuthorityMapper;
 import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
 import java.util.ArrayList;
@@ -32,9 +33,7 @@ public class MongoDBAuthService implements UserDetailsService {
                     + username);
         else {
             user = users.get(0);
-            authorityList = new ArrayList<>(user.getRoles().stream()
-                    .map(role -> new SimpleGrantedAuthority(role.getName()))
-                    .toList());
+            authorityList = new ArrayList<>(RoleAuthorityMapper.rolesToAuthority(user.getRoles(), new ArrayList<>()));
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
