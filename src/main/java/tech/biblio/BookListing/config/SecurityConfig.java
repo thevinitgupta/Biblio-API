@@ -23,16 +23,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import tech.biblio.BookListing.entities.Privilege;
 import tech.biblio.BookListing.entities.Role;
-import tech.biblio.BookListing.filters.AuthoritiesLoggingFilter;
-import tech.biblio.BookListing.filters.CsrfCookieFilter;
-import tech.biblio.BookListing.filters.RequestValidationFilter;
+import tech.biblio.BookListing.filters.*;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity(
-        debug = true
-)
 @EnableMethodSecurity(
 //        prePostEnabled = true,
         securedEnabled = true,
@@ -66,9 +61,8 @@ public class SecurityConfig {
                 new CsrfTokenRequestAttributeHandler();
         csrfTokenRequestHandler.setCsrfRequestAttributeName("_csrf");
 
-        http.securityContext((context) -> context
-                        .requireExplicitSave(false))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 //        http.cors(AbstractHttpConfigurer::disable);
 
         http.cors(
@@ -97,6 +91,10 @@ public class SecurityConfig {
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
                 http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
                 http.addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class);
+
+                // For JWT Tokens
+                http.addFilterBefore(new JWTValidationFilter(), BasicAuthenticationFilter.class);
+                http.addFilterAfter(new JWTGenerationFilter(), BasicAuthenticationFilter.class);
 
 
                 http.authorizeHttpRequests((requests) -> {
