@@ -32,7 +32,7 @@ public class JWTGenerationFilter extends OncePerRequestFilter {
                         .issuer("Biblio")
                         .subject("Session Token")
                         .claim("username", authentication.getName())
-                        .claim("roles", authentication.getAuthorities()
+                        .claim("authorities", authentication.getAuthorities()
                                 .stream().map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.joining(",")))
                         .issuedAt(new Date())
