@@ -31,7 +31,7 @@ public class UserController {
         try {
             UserDTO user = userService.getUserByEmail(email);
             if(user==null) {
-                return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
+                return new ResponseEntity<>("No Users Present with Email", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(user, HttpStatus.OK);
         }catch (Exception e){

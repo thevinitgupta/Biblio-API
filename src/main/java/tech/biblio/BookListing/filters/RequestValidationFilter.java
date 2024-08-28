@@ -20,8 +20,8 @@ public class RequestValidationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         try{
             String authHeader = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
-            authHeader = authHeader.trim();
             if(authHeader!=null && StringUtils.startsWith(authHeader, "Basic ")){
+                authHeader = authHeader.trim();
                 byte [] base64 = authHeader.substring(6).getBytes(StandardCharsets.UTF_8);
                 byte [] decoded = Base64.getDecoder().decode(base64);
                 String token = new String(decoded, StandardCharsets.UTF_8); // username:password

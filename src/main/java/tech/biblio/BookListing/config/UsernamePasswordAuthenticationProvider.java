@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,9 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.mappers.RoleAuthorityMapper;
 import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
@@ -19,26 +23,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
-    @Autowired
-    private AuthenticationRepository authenticationRepository;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    private final PasswordEncoder passwordEncoder;
+
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        List<AuthenticationUser> users = authenticationRepository.findByUsername(username);
-        if(users.isEmpty()){
-            throw new BadCredentialsException("No User found with Username");
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+        if(null == user){
+            throw new UserNotFoundException("No User found with Username");
         }
         else {
-            AuthenticationUser dbUser = users.get(0);
-            if(passwordEncoder.matches(password, dbUser.getPassword())){
+//            AuthenticationUser dbUser = user.;
+            if(passwordEncoder.matches(password, user.getPassword())){
                 List<GrantedAuthority> authorities = new ArrayList<>(
-                        RoleAuthorityMapper.rolesToAuthority(dbUser.getRoles(),
-                                new ArrayList<>()));
+                        user.getAuthorities());
                 return new UsernamePasswordAuthenticationToken(username,password,authorities);
             }
             else {

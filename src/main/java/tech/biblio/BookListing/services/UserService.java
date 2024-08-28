@@ -37,7 +37,9 @@ public class UserService {
     }
 
     public UserDTO getUserByEmail(String email) {
-        return  UserMapper.userDTO(userRepository.findFirstByEmail(email), false);
+        User dbUser = userRepository.findFirstByEmail(email);
+        if(dbUser==null) return null;
+        return  UserMapper.userDTO(dbUser, false);
     }
 
     public void deleteUser(User user){

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -84,7 +85,7 @@ public class SecurityConfig {
 
         http.csrf(httpSecurityCsrfConfigurer ->
                 httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
-                .ignoringRequestMatchers("/auth/register")
+                .ignoringRequestMatchers("/auth/register", "/auth/login")
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         ))
@@ -100,7 +101,8 @@ public class SecurityConfig {
                 http.authorizeHttpRequests((requests) -> {
 //            requests.anyRequest().permitAll();
             requests.requestMatchers("/health").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
+            requests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 
@@ -111,6 +113,16 @@ public class SecurityConfig {
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                                                PasswordEncoder passwordEncoder){
+        UsernamePasswordAuthenticationProvider authenticationProvider = new
+                UsernamePasswordAuthenticationProvider(userDetailsService,passwordEncoder);
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+        providerManager.setEraseCredentialsAfterAuthentication(false);
+        return providerManager;
     }
 }
 
