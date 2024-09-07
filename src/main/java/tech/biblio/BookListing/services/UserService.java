@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.User;
+import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.mappers.UserMapper;
 import tech.biblio.BookListing.repositories.UserRepository;
 
@@ -38,7 +39,7 @@ public class UserService {
 
     public UserDTO getUserByEmail(String email) {
         User dbUser = userRepository.findFirstByEmail(email);
-        if(dbUser==null) return null;
+        if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!");
         return  UserMapper.userDTO(dbUser, false);
     }
 

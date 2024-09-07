@@ -1,38 +1,37 @@
 package tech.biblio.BookListing.config;
 
-import jakarta.servlet.http.HttpServletMapping;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import tech.biblio.BookListing.entities.Privilege;
-import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.filters.*;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity(
 //        prePostEnabled = true,
         securedEnabled = true,
         jsr250Enabled = true
+)
+@EnableWebSecurity(
+        debug = true
 )
 public class SecurityConfig {
     private UserDetailsService userDetailsService;
@@ -72,13 +71,15 @@ public class SecurityConfig {
                             CorsConfiguration config = new CorsConfiguration();
                             config.addAllowedOrigin("http://localhost:3000");
 //                            config.addAllowedOrigin("http://localhost:3000");
-                            config.addAllowedHeader("*");
-                            config.addAllowedMethod("*");
+                            config.setAllowedHeaders(List.of("*"));
+                            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             config.setAllowCredentials(true);
+                            config.setExposedHeaders(List.of(HttpHeaders.SET_COOKIE)); // Expose Set-Cookie header to the client
                             config.setMaxAge(3600L);
                             return config;
                         }
                 ));
+
 
         // Disabling CSRF
          // http.csrf(AbstractHttpConfigurer::disable);
@@ -88,17 +89,23 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/auth/register", "/auth/login")
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
-                        ))
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
-                http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
-                http.addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class);
+                        ));
+        http.addFilterBefore(new GlobalExceptionHandlingFilter(), LogoutFilter.class);
 
-                // For JWT Tokens
-                http.addFilterBefore(new JWTValidationFilter(), BasicAuthenticationFilter.class);
-                http.addFilterAfter(new JWTGenerationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
+
+// Corrected Order for JWT Filters
+        http.addFilterAfter(new JWTValidationFilter(), RequestValidationFilter.class); // JWTValidation runs right after RequestValidation
+        http.addFilterAfter(new AuthoritiesLoggingFilter(), JWTValidationFilter.class); // AuthoritiesLogging runs after JWTValidation
+        http.addFilterAfter(new JWTGenerationFilter(), AuthoritiesLoggingFilter.class); // JWTGeneration runs after AuthoritiesLogging
+
+// For Refresh Token
+        http.addFilterAfter(new RefreshTokenValidationFilter(), JWTGenerationFilter.class); // Ensure it runs after JWT Generation
 
 
-                http.authorizeHttpRequests((requests) -> {
+
+        http.authorizeHttpRequests((requests) -> {
 //            requests.anyRequest().permitAll();
             requests.requestMatchers("/health").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
@@ -110,8 +117,8 @@ public class SecurityConfig {
 
             requests.requestMatchers("/admin/**").authenticated();
         });
-        http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+//        http.formLogin(withDefaults());
+//        http.httpBasic(withDefaults());
         return http.build();
     }
 
@@ -124,5 +131,7 @@ public class SecurityConfig {
         providerManager.setEraseCredentialsAfterAuthentication(false);
         return providerManager;
     }
+
+
 }
 

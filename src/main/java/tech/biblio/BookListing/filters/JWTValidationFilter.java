@@ -1,8 +1,6 @@
 package tech.biblio.BookListing.filters;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,10 +13,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tech.biblio.BookListing.contants.ApplicationConstants;
+import tech.biblio.BookListing.utils.JwtUtils;
 
-import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 
 @Slf4j
 public class JWTValidationFilter extends OncePerRequestFilter {
@@ -26,39 +24,47 @@ public class JWTValidationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
-           String jwtToken = request.getHeader(ApplicationConstants.JWT_HEADER);
-           if(jwtToken!=null) {
+           String authHeader = request.getHeader(ApplicationConstants.JWT_HEADER);
+            JwtUtils jwtUtils = new JwtUtils();
+
+           if(authHeader!=null) {
+               authHeader = authHeader.trim();
+
+               String jwtToken = authHeader.substring(6);
+               if(jwtToken.isEmpty() || jwtToken.equals("undefined")) throw new AccessDeniedException("Access Token Missing");
                Environment env = getEnvironment();
-               String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
-                       ApplicationConstants.JWT_SECRET_DEFAULT);
-               SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-               if(secretKey!=null){
-                   Claims claims = Jwts.parser().verifyWith(secretKey)
-                           .build().parseSignedClaims(jwtToken).getPayload();
-                   String username = String.valueOf(claims.get("username"));
-                   String authorities = String.valueOf(claims.get("authorities"));
-                   log.info("Username : {}",username);
-                   log.info("Authorities : {}", authorities);
-                   UsernamePasswordAuthenticationToken authenticationToken = new
-                           UsernamePasswordAuthenticationToken(username,null,
-                           AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-                   SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+               Claims claims = jwtUtils.getClaimsFromJwt(jwtToken,env);
+               if(claims==null){
+                   throw new BadCredentialsException("Invalid Token Received!");
                }
+               String username = String.valueOf(claims.get("username"));
+               String authorities = String.valueOf(claims.get("authorities"));
+               log.info("Username : {}",username);
+               log.info("Authorities : {}", authorities);
+               UsernamePasswordAuthenticationToken authenticationToken = new
+                       UsernamePasswordAuthenticationToken(username,null,
+                       AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+               SecurityContextHolder.getContext().setAuthentication(authenticationToken);
            }
-        }catch (Exception e){
-            throw new BadCredentialsException("Invalid Token Received!");
+        }finally {
+
         }
         filterChain.doFilter(request,response);
     }
-
+    private void handleAccessDenied(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set the status code
+        response.setContentType("application/json");
+        log.error(
+                "{\"status\":\"UNAUTHORIZED\",\"message\":\"" + message + "\",\"error\":\"Access Denied\"}");
+    }
     /**
      * Used for Prevent the filter for certain conditions. The conditions where the method returns true,
      * the current filter is NOT RUN
      * @Returns true for /user URL, false otherwise
      * @Params HttpServletRequest request
      */
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/user");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+////        return request.getServletPath().equals("/user");
+//    }
 }

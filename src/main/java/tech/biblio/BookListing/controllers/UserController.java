@@ -5,14 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.services.UserService;
-
-import java.util.List;
 
 
 @RestController
@@ -23,18 +20,21 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getUsers(){
+    public ResponseEntity<?> getUsers(@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        System.out.println(authentication.getName());
         log.info("User Logged In with Email {}",authentication.getName());
-        String email = authentication.getName();
         try {
+            String email = authentication.getName();
+//            Cookie[] cookies =
+            System.out.println("Cookies in user contrl : \n"+ refreshToken);
             UserDTO user = userService.getUserByEmail(email);
             if(user==null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(user, HttpStatus.OK);
-        }catch (Exception e){
+        }
+        catch (MongoException e){
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
