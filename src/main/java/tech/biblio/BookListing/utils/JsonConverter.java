@@ -1,8 +1,10 @@
 package tech.biblio.BookListing.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.dto.ErrorResponse;
 
+@Component
 public class JsonConverter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 

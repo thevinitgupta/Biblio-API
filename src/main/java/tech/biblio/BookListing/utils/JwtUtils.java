@@ -84,10 +84,10 @@ public class JwtUtils {
     }
 
 
-    public boolean validateAccessToken(String jwtToken){
+    public boolean validateAccessToken(String jwtToken, Environment environment){
         String validationMessage = "";
         try {
-            String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
+            String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwtToken);

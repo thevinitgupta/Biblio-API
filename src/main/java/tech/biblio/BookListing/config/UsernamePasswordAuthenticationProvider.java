@@ -1,26 +1,20 @@
 package tech.biblio.BookListing.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import tech.biblio.BookListing.entities.AuthenticationUser;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
-import tech.biblio.BookListing.mappers.RoleAuthorityMapper;
-import tech.biblio.BookListing.repositories.AuthenticationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -37,7 +31,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);
         if(null == user){
-            throw new UserNotFoundException("No User found with Username");
+            throw new UserNotFoundException("No User found with Username", username);
         }
         else {
 //            AuthenticationUser dbUser = user.;

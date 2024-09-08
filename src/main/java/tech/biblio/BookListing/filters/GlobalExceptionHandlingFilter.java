@@ -1,48 +1,62 @@
 package tech.biblio.BookListing.filters;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tech.biblio.BookListing.dto.ErrorResponse;
+import tech.biblio.BookListing.handlers.AuthenticationExceptionHandler;
+import tech.biblio.BookListing.handlers.InvalidValueExceptionHandler;
+import tech.biblio.BookListing.handlers.ResourceExceptionHandler;
 import tech.biblio.BookListing.utils.JsonConverter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component // Set a high order value to make it the last filter
 @NoArgsConstructor
+@Slf4j
 public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
 
+    @Autowired
+    public AuthenticationExceptionHandler authenticationExceptionHandler;
+
+    @Autowired
+    public ResourceExceptionHandler resourceExceptionHandler;
+
+    @Autowired
+    public InvalidValueExceptionHandler invalidValueExceptionHandler;
 
 
     private void handleException(HttpServletResponse response, Exception ex) throws IOException {
         JsonConverter jsonConverter = new JsonConverter();
-        ErrorResponse errorResponse = new ErrorResponse();
-        if(ex instanceof AccessDeniedException){
-            System.out.println("Access Denied Exception in Filters");
-        errorResponse.setError("Access Denied");
-        errorResponse.setErrorDescription(ex.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        else if(ex instanceof JwtException){
-            errorResponse.setError("Access Denied");
-            errorResponse.setErrorDescription(ex.getMessage());
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
+        ErrorResponse errorResponse = null;
 
-        else {
-            errorResponse.setError(String.valueOf(UnknownError.class));
-            errorResponse.setErrorDescription("An Unknown error occurred : "+ex.getLocalizedMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        errorResponse = authenticationExceptionHandler.handler(ex);
+        if(errorResponse==null) {
+            errorResponse = resourceExceptionHandler.handler(ex);
         }
-
+        if(errorResponse==null){
+            errorResponse = invalidValueExceptionHandler.handler(ex);
+        }
+        if(errorResponse==null){
+            log.error("Unknown Exception in filter : {}, {}", ex.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            errorResponse = ErrorResponse.builder()
+                    .error("Unknown Error")
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                    .errorDescription(ex.getLocalizedMessage())
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
         response.setContentType("application/json");
-
+        response.setStatus(errorResponse.getHttpStatus().value());
 
         response.getWriter().write(jsonConverter.getJsonObject(errorResponse));
     }
@@ -50,7 +64,6 @@ public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            System.out.println("Global Exception Filter : ");
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
             handleException(response, ex);

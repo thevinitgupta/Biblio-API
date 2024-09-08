@@ -16,7 +16,6 @@ import tech.biblio.BookListing.contants.ApplicationConstants;
 import tech.biblio.BookListing.utils.JwtUtils;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 @Slf4j
 public class JWTValidationFilter extends OncePerRequestFilter {
@@ -30,9 +29,9 @@ public class JWTValidationFilter extends OncePerRequestFilter {
            if(authHeader!=null) {
                authHeader = authHeader.trim();
 
-               String jwtToken = authHeader.substring(6);
-               if(jwtToken.isEmpty() || jwtToken.equals("undefined")) throw new AccessDeniedException("Access Token Missing");
+               String jwtToken = authHeader.substring(Math.min(authHeader.length()-1, 6));
                Environment env = getEnvironment();
+               boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception is Invalid
                Claims claims = jwtUtils.getClaimsFromJwt(jwtToken,env);
                if(claims==null){
                    throw new BadCredentialsException("Invalid Token Received!");

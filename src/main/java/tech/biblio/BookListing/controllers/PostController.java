@@ -42,19 +42,10 @@ public class PostController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         System.out.println(post.toString());
-        try {
-            Post savedPost = postService.addPost(email,post);
-            return new ResponseEntity<Post>(savedPost, HttpStatus.CREATED);
-        }catch (UserNotFoundException e){
-            System.out.println(e.getLocalizedMessage());
-            String message = "User with Email "+ email+" does not Exist";
-            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-        }
-        catch (Exception e){
-            System.out.println(e.getClass() + ", "+ e.getMessage()  );
-            String message = e instanceof UncategorizedMongoDbException ? "Database Error" : e.getLocalizedMessage();
-            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        Post savedPost = postService.addPost(email,post);
+        return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
+
     }
 
     @GetMapping
@@ -63,12 +54,12 @@ public class PostController {
         String email = authentication.getName();
         try {
             UserDTO user = userService.getUserByEmail(email);
-            if(user==null) throw new UserNotFoundException("");
+            if(user==null) throw new UserNotFoundException("", email);
             List<Post> userPosts = user.getPosts();
-            if(userPosts!=null && !userPosts.isEmpty()) {
-                return new ResponseEntity<>(userPosts, HttpStatus.FOUND);
+            if(userPosts==null && userPosts.isEmpty()) {
+                throw new PostNotFoundException("No Posts found for User", user.getFirstName());
             }
-            return new ResponseEntity<>("No Posts found for "+user.getFirstName(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(userPosts, HttpStatus.FOUND);
         }catch (UserNotFoundException e){
             System.out.println(e.getLocalizedMessage());
             String message = "User with Email "+ email+" does not Exist";
@@ -85,7 +76,7 @@ public class PostController {
     public ResponseEntity<?> updatePost(@RequestBody Post post, @PathVariable String id, @PathVariable String email){
         try {
             Post dbPost = postService.getById(id);
-            if(dbPost==null) throw new PostNotFoundException("");
+            if(dbPost==null) throw new PostNotFoundException("", email);
             System.out.println(post.toString()+" : "+EqualsBuilder.reflectionEquals(dbPost, post, "id"));
             if(EqualsBuilder.reflectionEquals(dbPost, post, "id")) {
                 return new ResponseEntity<>("Post data same, no changes made", HttpStatus.NO_CONTENT);

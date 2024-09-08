@@ -39,7 +39,7 @@ public class UserService {
 
     public UserDTO getUserByEmail(String email) {
         User dbUser = userRepository.findFirstByEmail(email);
-        if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!");
+        if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!", email);
         return  UserMapper.userDTO(dbUser, false);
     }
 

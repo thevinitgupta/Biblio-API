@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,8 @@ import java.util.List;
 )
 public class SecurityConfig {
     private UserDetailsService userDetailsService;
+    @Autowired
+    private GlobalExceptionHandlingFilter globalExceptionHandlingFilter;
 
     public SecurityConfig(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
@@ -90,7 +93,7 @@ public class SecurityConfig {
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         ));
-        http.addFilterBefore(new GlobalExceptionHandlingFilter(), LogoutFilter.class);
+        http.addFilterBefore(globalExceptionHandlingFilter, LogoutFilter.class);
 
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
         http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
