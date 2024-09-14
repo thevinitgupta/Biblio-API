@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
             RefreshTokenValidationException.class
     })
     public ResponseEntity<ErrorResponse> handleResourceException(Exception e){
-        ErrorResponse errorResponse = resourceExceptionHandler.handler(e);
+        ErrorResponse errorResponse = authenticationExceptionHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }

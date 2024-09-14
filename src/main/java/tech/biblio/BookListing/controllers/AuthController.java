@@ -1,7 +1,8 @@
 package tech.biblio.BookListing.controllers;
 
 import com.mongodb.MongoException;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -13,28 +14,28 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import tech.biblio.BookListing.contants.ApplicationConstants;
-import tech.biblio.BookListing.dto.UserDTO;
-import tech.biblio.BookListing.entities.AuthenticationUser;
+import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.dto.LoginRequestDTO;
 import tech.biblio.BookListing.dto.LoginResponseDTO;
+import tech.biblio.BookListing.dto.UserDTO;
+import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.entities.RefreshTokenStore;
 import tech.biblio.BookListing.entities.User;
+import tech.biblio.BookListing.exceptions.RefreshTokenValidationException;
 import tech.biblio.BookListing.mappers.UserMapper;
 import tech.biblio.BookListing.services.MongoDBAuthService;
+import tech.biblio.BookListing.services.RefreshTokenService;
 import tech.biblio.BookListing.services.RoleService;
 import tech.biblio.BookListing.services.UserService;
 import tech.biblio.BookListing.utils.JwtUtils;
 import tech.biblio.BookListing.utils.UniqueID;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("auth")
@@ -47,6 +48,9 @@ public class AuthController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    RefreshTokenService refreshTokenService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,11 +67,13 @@ public class AuthController {
 
     @GetMapping("register")
     public ResponseEntity<?> register(){
-        return new ResponseEntity<>("Cannot Get Here. Only POST Allowed", HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("Cannot Get Here. Only POST Allowed",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest, HttpServletResponse httpResponse){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest,
+                                                  HttpServletResponse httpResponse){
         UserDTO dbUser = null;
         String accessToken = null;
         String refreshToken = null;
@@ -94,20 +100,35 @@ public class AuthController {
 
             if(null != authenticationResponse && authenticationResponse.isAuthenticated()){
                 if(env==null) throw new NullPointerException();
-                String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
-                        ApplicationConstants.JWT_SECRET_DEFAULT);
-                SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-                accessToken = jwtUtils.generateJwtToken(authenticationResponse, new HashMap<>());
+                HashMap<String, Object> accessTokenClaims = new HashMap<>();
+                accessTokenClaims.put("username", authenticationResponse.getName());
+                accessTokenClaims.put("authorities", authenticationResponse.getAuthorities()
+                        .stream().map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.joining(",")));
+                accessToken = jwtUtils.generateAccessToken(accessTokenClaims, env);
                 HashMap<String, Object> refreshTokenClaimsMap = new HashMap<>();
                 refreshTokenID = UniqueID.generateId();
+                refreshTokenClaimsMap.put("username", authenticationResponse.getName());
                 refreshTokenClaimsMap.put("token-id",refreshTokenID);
-                refreshToken = jwtUtils.generateRefreshToken(authenticationResponse,refreshTokenClaimsMap);
+                refreshToken = jwtUtils.generateRefreshToken(refreshTokenClaimsMap, env);
 
                 String setCookieHeader = String.format(
-                        "refresh-token=%s; HttpOnly; Secure; Path=/; Max-Age=%d; SameSite=None",
+                        "refreshToken=%s; HttpOnly; Secure; Path=/; Max-Age=%d; SameSite=None",
                         refreshToken,
                         7 * 24 * 60 * 60 // 7 days expiration
                 );
+
+                // Register Refresh Token in Repository
+                RefreshTokenStore refreshTokenStore = RefreshTokenStore.builder()
+                        .tokenId(refreshTokenID)
+                        .refreshToken(refreshToken)
+                        .username(loginRequest.email())
+                        .issuedAt(new Date(System.currentTimeMillis()))
+                        .isValid(true)
+                        .build();
+
+                refreshTokenService.saveToken(refreshTokenStore);
+
                 httpResponse.setHeader("Set-Cookie", setCookieHeader);
                 return ResponseEntity
                         .status(HttpStatus.OK)
@@ -183,5 +204,44 @@ public class AuthController {
         }
     }
 
+    @GetMapping("access-token")
+    public ResponseEntity<?> generateAccessToken(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken, HttpServletRequest request){
+        try {
+            if(refreshToken==null || refreshToken.isEmpty()) throw new RefreshTokenValidationException("No Refresh Token found");
+            if(env!=null){
+                boolean validateTokenFormat = jwtUtils.validateRefreshToken(refreshToken, env);
+                final Claims claimsFromJwt = jwtUtils.getClaimsFromJwt(refreshToken, env);
+                boolean validateDbToken = refreshTokenService.checkValidity(
+                        claimsFromJwt.get("token-id", String.class));
+                /*
+                 COMPLETED : 1. Remove User details being passed to Token Generators, pass only Username and if Required Authorities
+                 COMPLETED : 2. Add access token generation
+                */
+                if(validateTokenFormat && validateDbToken){
+                    String accessToken = "";
+                    UserDTO user = userService.getUserByEmail(claimsFromJwt.get("username", String.class));
+
+                    HashMap<String, Object> accessTokenClaims = new HashMap<>();
+                    accessTokenClaims.put("username", user.getEmail());
+                    accessTokenClaims.put("authorities", userService.getUserAuthorities(user.getEmail())
+                            .stream().map(GrantedAuthority::getAuthority)
+                            .collect(Collectors.joining(",")));
+
+                    accessToken = jwtUtils.generateAccessToken(accessTokenClaims, env);
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .body(new LoginResponseDTO(
+                                    HttpStatus.OK.getReasonPhrase(),
+                                    "Login Successfull",
+                                    accessToken
+                            ));
+                }
+            }
+
+        }finally {
+
+        }
+        return null;
+    }
 
 }

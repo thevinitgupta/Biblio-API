@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getUsers(@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken){
+    public ResponseEntity<?> getUsers(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        System.out.println(authentication.getName());
         log.info("User Logged In with Email {}",authentication.getName());

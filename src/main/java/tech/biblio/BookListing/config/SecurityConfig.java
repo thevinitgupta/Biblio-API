@@ -89,7 +89,7 @@ public class SecurityConfig {
 
         http.csrf(httpSecurityCsrfConfigurer ->
                 httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
-                .ignoringRequestMatchers("/auth/register", "/auth/login")
+                .ignoringRequestMatchers("/auth/register", "/auth/login", "auth/access-token")
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         ));
@@ -113,6 +113,7 @@ public class SecurityConfig {
             requests.requestMatchers("/health").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
+            requests.requestMatchers(HttpMethod.GET,"/auth/access-token").permitAll();
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 

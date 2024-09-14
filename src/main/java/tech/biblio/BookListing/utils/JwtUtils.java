@@ -4,10 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.contants.ApplicationConstants;
 import tech.biblio.BookListing.exceptions.AccessTokenValidationException;
@@ -18,29 +15,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class JwtUtils {
 
 
-    @Autowired
-    private Environment env;
 
-    public String generateJwtToken(Authentication userDetails, HashMap<String ,Object> claims){
+
+    public String generateAccessToken(HashMap<String ,Object> claims, Environment environment){
+        if(!claims.containsKey("username")) throw new IllegalArgumentException("Username Missing");
         String accessTokenExpiry = ApplicationConstants.ACCESS_TOKEN_EXPIRY;
-        long accessTokenTime = Long.parseLong(Objects.requireNonNull(env.getProperty(accessTokenExpiry)));
-        return generateJwtTokenFromUsername(userDetails, "Access-Token", claims, accessTokenTime);
+        long accessTokenTime = Long.parseLong(Objects.requireNonNull(environment.getProperty(accessTokenExpiry)));
+        return generateJwtTokenFromUsername("Access-Token", claims, accessTokenTime, environment);
     }
 
-    public String generateRefreshToken(Authentication userDetails, HashMap<String ,Object> claims){
+    public String generateRefreshToken(HashMap<String ,Object> claims, Environment environment){
         String refreshTokenExpiry = ApplicationConstants.REFRESH_TOKEN_EXPIRY;
-        long refreshTokenTime = Long.parseLong(Objects.requireNonNull(env.getProperty(refreshTokenExpiry)));
-        return generateJwtTokenFromUsername(userDetails, "Refresh-Token", claims, refreshTokenTime);
+        long refreshTokenTime = Long.parseLong(Objects.requireNonNull(environment.getProperty(refreshTokenExpiry)));
+        return generateJwtTokenFromUsername("Refresh-Token", claims, refreshTokenTime, environment);
     }
 
-    public String generateJwtTokenFromUsername(Authentication userDetails, String subject, HashMap<String ,Object> claims, long tokenExpiry){
+    private String generateJwtTokenFromUsername( String subject, HashMap<String ,Object> claims, long tokenExpiry, Environment env){
         if(env!=null){
             String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
@@ -50,10 +46,7 @@ public class JwtUtils {
                     .issuer("Biblio")
                     .subject(subject)
                     .claims(claims)
-                    .claim("username", userDetails.getName())
-                    .claim("authorities", userDetails.getAuthorities()
-                            .stream().map(GrantedAuthority::getAuthority)
-                            .collect(Collectors.joining(",")))
+                    // add username and authorities in the claims object being passed for Access Token, only keep username for Refresh Token
                     .issuedAt(new Date())
                     .expiration(new Date(new Date().getTime()+tokenExpiry))
                     .signWith(secretKey).compact();
@@ -115,11 +108,11 @@ public class JwtUtils {
         return false;
     }
 
-    public boolean validateRefreshToken(String jwtToken){
+    public boolean validateRefreshToken(String jwtToken, Environment environment){
         String validationMessage = "";
         try {
             // TODO : Add Token Validation from Repository Logic
-            String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
+            String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwtToken);
