@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import tech.biblio.BookListing.dto.CreatePostDTO;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.PostNotFoundException;
@@ -37,12 +38,17 @@ public class PostController {
 //            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
-    @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody Post post){
+    @PostMapping("/create")
+    public ResponseEntity<?> createPost(@RequestBody CreatePostDTO createPostDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        Post post = Post.builder()
+                        .title(createPostDTO.title())
+                        .content(createPostDTO.content())
+                        .likes(0)
+                        .comments(new String[]{})
+                        .build();
         System.out.println(post.toString());
-
         Post savedPost = postService.addPost(email,post);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
 
@@ -53,10 +59,10 @@ public class PostController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         try {
-            UserDTO user = userService.getUserByEmail(email);
+            UserDTO user = userService.getUserByEmail(email, true);
             if(user==null) throw new UserNotFoundException("", email);
             List<Post> userPosts = user.getPosts();
-            if(userPosts==null && userPosts.isEmpty()) {
+            if(userPosts==null || userPosts.isEmpty()) {
                 throw new PostNotFoundException("No Posts found for User", user.getFirstName());
             }
             return new ResponseEntity<>(userPosts, HttpStatus.FOUND);

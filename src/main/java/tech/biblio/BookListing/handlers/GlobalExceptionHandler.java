@@ -8,10 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.biblio.BookListing.dto.ErrorResponse;
-import tech.biblio.BookListing.exceptions.AccessTokenValidationException;
-import tech.biblio.BookListing.exceptions.PostNotFoundException;
-import tech.biblio.BookListing.exceptions.RefreshTokenValidationException;
-import tech.biblio.BookListing.exceptions.UserNotFoundException;
+import tech.biblio.BookListing.exceptions.*;
 import tech.biblio.BookListing.utils.JsonConverter;
 
 import java.util.MissingResourceException;
@@ -59,13 +56,15 @@ public class GlobalExceptionHandler {
             StringIndexOutOfBoundsException.class,
             ArrayIndexOutOfBoundsException.class,
             NumberFormatException.class,
-            NullPointerException.class
+            NullPointerException.class,
+            InvalidUserDetailsException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidValueException(Exception e){
         ErrorResponse errorResponse = invalidValueExceptionHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e){

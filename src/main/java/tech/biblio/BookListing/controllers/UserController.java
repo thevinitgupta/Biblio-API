@@ -28,7 +28,7 @@ public class UserController {
             String email = authentication.getName();
 //            Cookie[] cookies =
             System.out.println("Cookies in user contrl : \n"+ refreshToken);
-            UserDTO user = userService.getUserByEmail(email);
+            UserDTO user = userService.getUserByEmail(email, false);
             if(user==null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.NOT_FOUND);
             }
@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/{email}")
     public ResponseEntity<?> getUsersByEmail(@PathVariable String email){
         try {
-            UserDTO user = userService.getUserByEmail(email);
+            UserDTO user = userService.getUserByEmail(email, false);
 
             if(user==null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);

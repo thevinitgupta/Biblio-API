@@ -2,15 +2,14 @@ package tech.biblio.BookListing.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import tech.biblio.BookListing.exceptions.InvalidUserDetailsException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);
@@ -41,7 +40,8 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
                 return new UsernamePasswordAuthenticationToken(username,password,authorities);
             }
             else {
-                throw new BadCredentialsException("Wrong Password");
+                System.out.println("Invalid Password Found");
+                throw new InvalidUserDetailsException("Wrong Password");
             }
         }
     }

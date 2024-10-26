@@ -7,16 +7,20 @@ import tech.biblio.BookListing.entities.Role;
 import tech.biblio.BookListing.entities.User;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class UserMapper {
     public static  UserDTO userDTO(User user, boolean allowPosts){
         return new UserDTO(user.getEmail(), user.getFirstName(), user.getLastName(), allowPosts ? user.getPosts() : null);
     }
     public static User userEntity(UserDTO userDTO, User dbUser){
-        User user = new User(userDTO.getEmail(), userDTO.getFirstName(), dbUser.getPassword());
-        user.setId(dbUser.getId());
-        user.setPosts(dbUser.getPosts());
+        User user = User.builder()
+                .id(dbUser.getId())
+                .email(userDTO.getEmail())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .password(dbUser.getPassword())
+                .posts(dbUser.getPosts())
+                .build();
         System.out.println("User Entity : "+user);
         return user;
     }

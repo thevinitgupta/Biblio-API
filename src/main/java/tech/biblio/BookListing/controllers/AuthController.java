@@ -11,17 +11,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import tech.biblio.BookListing.dto.LoginRequestDTO;
-import tech.biblio.BookListing.dto.LoginResponseDTO;
-import tech.biblio.BookListing.dto.UserDTO;
+import tech.biblio.BookListing.dto.*;
 import tech.biblio.BookListing.entities.AuthenticationUser;
+import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.entities.RefreshTokenStore;
 import tech.biblio.BookListing.entities.User;
 import tech.biblio.BookListing.exceptions.RefreshTokenValidationException;
@@ -33,6 +32,7 @@ import tech.biblio.BookListing.services.UserService;
 import tech.biblio.BookListing.utils.JwtUtils;
 import tech.biblio.BookListing.utils.UniqueID;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -73,7 +73,8 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest,
-                                                  HttpServletResponse httpResponse){
+                                                  HttpServletResponse httpResponse,
+                                                  HttpServletRequest httpRequest){
         UserDTO dbUser = null;
         String accessToken = null;
         String refreshToken = null;
@@ -85,7 +86,7 @@ public class AuthController {
                     HttpStatus.BAD_REQUEST);
         }
         try {
-            dbUser = userService.getUserByEmail(loginRequest.email());
+            dbUser = userService.getUserByEmail(loginRequest.email(), false);
             if(null==dbUser) {
                 return new ResponseEntity<>(
                         new LoginResponseDTO(HttpStatus.NOT_FOUND.getReasonPhrase(),"No user with email exists",null),
@@ -130,6 +131,16 @@ public class AuthController {
                 refreshTokenService.saveToken(refreshTokenStore);
 
                 httpResponse.setHeader("Set-Cookie", setCookieHeader);
+
+                CsrfToken csrfToken = (CsrfToken) httpRequest.getAttribute(CsrfToken.class.getName());
+                if (csrfToken != null) {
+                    // Set XSRF-TOKEN as a cookie for the frontend
+                    String csrfCookie = String.format(
+                            "XSRF-TOKEN=%s; Path=/; Secure; SameSite=None",
+                            csrfToken.getToken()
+                    );
+                    httpResponse.setHeader("Set-Cookie", csrfCookie);
+                }
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(new LoginResponseDTO(
@@ -146,61 +157,73 @@ public class AuthController {
                             accessToken
                     ));
 
-        }catch (BadCredentialsException e){
-            return new ResponseEntity<>(
-                    new LoginResponseDTO(
-                            HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                            e.getLocalizedMessage(),
-                            ""
-                    ), HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }catch (Exception e){
-            return new ResponseEntity<>(
-                    new LoginResponseDTO(
-                            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                            e.getLocalizedMessage(),
-                            ""
-                    ), HttpStatus.INTERNAL_SERVER_ERROR
-            );
+        }finally {
+
         }
 
 //        return new ResponseEntity<>(new LoginResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.toString(),"Something Went Wrong", ""), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // TODO : Convert returns to JSON always
     @PostMapping("register")
-    public ResponseEntity<?> addUser(@RequestBody User user){
+    public ResponseEntity<?> addUser(@RequestBody RegisterRequestDTO registerRequest){
         User savedUser = null;
-        if(user==null) {
-            return new ResponseEntity<>("No User Passed", HttpStatus.NO_CONTENT);
+        if(registerRequest==null) {
+            return new ResponseEntity<>(new RegisterResponseDTO(
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "User Registration Data missing"
+            ), HttpStatus.NO_CONTENT);
         }
         try {
-            user.setRoles(roleService.getRoles("ROLE_USER"));
+            User user = User.builder()
+                            .firstName(registerRequest.firstName())
+                                    .lastName(registerRequest.lastName())
+                                            .roles(roleService.getRoles("ROLE_USER"))
+                    .email(registerRequest.email())
+                    .password(registerRequest.password())
+                    .posts(new ArrayList<Post>())
+                    .build();
             AuthenticationUser authenticationUser = UserMapper.authUser(user,roleService.getRoles("ROLE_USER"), passwordEncoder);
             savedUser = userService.addUser(user);
+
             AuthenticationUser savedAuthUser = authService.addUser(authenticationUser);
+
             if(savedAuthUser==null) throw new AuthorizationServiceException("User not created.");
             StringBuilder saveMessage = new StringBuilder()
                     .append("User with email : ")
                     .append(savedUser.getEmail())
                     .append(" saved successfully");
-            return new ResponseEntity<>(saveMessage, HttpStatus.CREATED);
+            return new ResponseEntity<>(new RegisterResponseDTO(
+                    HttpStatus.CREATED.getReasonPhrase(),
+                    saveMessage.toString()
+            ), HttpStatus.CREATED);
         }catch (AuthorizationServiceException authException){
             userService.deleteUser(savedUser);
-            return new ResponseEntity<>("User Not Registered", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ErrorResponse.builder().error("Unknown Error")
+                    .errorDescription("User not registered, try again")
+                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .httpStatus(HttpStatus.BAD_REQUEST).build(),
+                    HttpStatus.BAD_REQUEST);
         }
         catch (DuplicateKeyException e){
-            return new ResponseEntity<>("User with Email Already Exists",
+            return new ResponseEntity<>(ErrorResponse.builder().error("Invalid Email")
+                    .errorDescription("User with Email already exists")
+                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .httpStatus(HttpStatus.BAD_REQUEST).build(),
                     HttpStatus.BAD_REQUEST);
         }
         catch (Exception e){
-            System.out.println(e.getClass());
-//            if(userService.getUserByEmail(user.getEmail())!=null)
             if(savedUser!=null) {
                 userService.deleteUser(savedUser);
             }
-            String message = e instanceof MongoException ? "Error Saving in MongoDB" : "Server Error";
+            String message = e instanceof MongoException ? "Error Saving in Database" : "User not registered, try again";
             System.out.println(e.getLocalizedMessage());
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ErrorResponse.builder()
+                    .error("Unknown Error")
+                    .errorDescription(message)
+                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .httpStatus(HttpStatus.BAD_REQUEST).build(),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -219,7 +242,7 @@ public class AuthController {
                 */
                 if(validateTokenFormat && validateDbToken){
                     String accessToken = "";
-                    UserDTO user = userService.getUserByEmail(claimsFromJwt.get("username", String.class));
+                    UserDTO user = userService.getUserByEmail(claimsFromJwt.get("username", String.class), false);
 
                     HashMap<String, Object> accessTokenClaims = new HashMap<>();
                     accessTokenClaims.put("username", user.getEmail());

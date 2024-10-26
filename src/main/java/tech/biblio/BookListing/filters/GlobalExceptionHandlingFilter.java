@@ -38,7 +38,7 @@ public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
     private void handleException(HttpServletResponse response, Exception ex) throws IOException {
         JsonConverter jsonConverter = new JsonConverter();
         ErrorResponse errorResponse = null;
-
+        System.out.println("Global Exception Handler : "+ex.getMessage());
         errorResponse = authenticationExceptionHandler.handler(ex);
         if(errorResponse==null) {
             errorResponse = resourceExceptionHandler.handler(ex);

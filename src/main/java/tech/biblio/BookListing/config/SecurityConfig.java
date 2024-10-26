@@ -77,7 +77,7 @@ public class SecurityConfig {
                             config.setAllowedHeaders(List.of("*"));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             config.setAllowCredentials(true);
-                            config.setExposedHeaders(List.of(HttpHeaders.SET_COOKIE)); // Expose Set-Cookie header to the client
+                            config.setExposedHeaders(List.of(HttpHeaders.SET_COOKIE,"X-CSRF-TOKEN","_csrf")); // Expose Set-Cookie header to the client
                             config.setMaxAge(3600L);
                             return config;
                         }
@@ -89,7 +89,8 @@ public class SecurityConfig {
 
         http.csrf(httpSecurityCsrfConfigurer ->
                 httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
-                .ignoringRequestMatchers("/auth/register", "/auth/login", "auth/access-token")
+
+                .ignoringRequestMatchers(HttpMethod.OPTIONS.name(),"/auth/register", "/auth/login", "auth/access-token")
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         ));

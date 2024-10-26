@@ -15,7 +15,7 @@ public class ResourceExceptionHandler {
     public ErrorResponse handler(Exception e){
         if(e instanceof UserNotFoundException){
             return ErrorResponse.builder()
-                    .error("User Not Found")
+                    .error("UserNotFoundException")
                     .status(HttpStatus.NOT_FOUND.getReasonPhrase())
                     .errorDescription("User with the specified email does not exist.")
                     .httpStatus(HttpStatus.NOT_FOUND)
@@ -23,7 +23,7 @@ public class ResourceExceptionHandler {
         }
         else if(e instanceof PostNotFoundException){
             return ErrorResponse.builder()
-                    .error("Post Not Found")
+                    .error("PostNotFoundException")
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .errorDescription("The Post you are looking for does not exist")
                     .httpStatus(HttpStatus.BAD_REQUEST)
@@ -31,7 +31,7 @@ public class ResourceExceptionHandler {
         }
         else if(e instanceof MissingResourceException){
             return ErrorResponse.builder()
-                    .error("Missing Resource")
+                    .error("MissingResourceException")
                     .status(HttpStatus.NOT_FOUND.getReasonPhrase())
                     .httpStatus(HttpStatus.NOT_FOUND)
                     .errorDescription("The requested data is not available").build();

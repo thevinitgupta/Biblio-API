@@ -40,10 +40,10 @@ public class UserService {
         return userRepository.findByFirstName(firstName).stream().map(user -> UserMapper.userDTO(user,false)).toList();
     }
 
-    public UserDTO getUserByEmail(String email) {
+    public UserDTO getUserByEmail(String email, boolean allowPosts) {
         User dbUser = userRepository.findFirstByEmail(email);
         if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!", email);
-        return  UserMapper.userDTO(dbUser, false);
+        return  UserMapper.userDTO(dbUser, allowPosts);
     }
 
     public Collection<GrantedAuthority> getUserAuthorities(String email){

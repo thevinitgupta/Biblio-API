@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.entities;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Document(collection = "user")
 @Data
+@Builder
 public class User implements UserDetails {
     @Id
     private ObjectId id;

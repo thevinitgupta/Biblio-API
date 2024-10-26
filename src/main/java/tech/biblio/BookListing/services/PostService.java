@@ -9,6 +9,7 @@ import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.repositories.PostRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,10 +21,13 @@ public class PostService {
 
     @Transactional
     public Post addPost(String email, Post post){
-        UserDTO user = userService.getUserByEmail(email);
+        UserDTO user = userService.getUserByEmail(email, true);
         if(user==null) throw new UserNotFoundException("User with Email not Found", email);
         System.out.println(user);
         Post saved = postRepository.save(post);
+        if(user.getPosts()==null){
+            user.setPosts(new ArrayList<>( ));
+        }
         user.getPosts().add(saved);
         System.out.println(user.toString());
         userService.updateUser(user);

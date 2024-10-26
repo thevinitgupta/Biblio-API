@@ -30,7 +30,9 @@ public class JWTValidationFilter extends OncePerRequestFilter {
                authHeader = authHeader.trim();
 
                String jwtToken = authHeader.substring(Math.min(authHeader.length()-1, 6));
+               jwtToken = jwtToken.trim();
                Environment env = getEnvironment();
+               System.out.println("Access Token : |"+jwtToken);
                boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception is Invalid
                Claims claims = jwtUtils.getClaimsFromJwt(jwtToken,env);
                if(claims==null){

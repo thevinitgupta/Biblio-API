@@ -15,7 +15,7 @@ public class AuthenticationExceptionHandler {
 
         if(e instanceof AccessTokenValidationException){
             return ErrorResponse.builder()
-                    .error("Invalid Access Token")
+                    .error("AccessTokenValidationException")
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .errorDescription("Session expired, trying to Login again.")
                     .httpStatus(HttpStatus.BAD_REQUEST)
@@ -23,7 +23,7 @@ public class AuthenticationExceptionHandler {
         }
         else if(e instanceof RefreshTokenValidationException){
             return ErrorResponse.builder()
-                    .error("Invalid Refresh Token")
+                    .error("RefreshTokenValidationException")
                     .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                     .errorDescription("Logged out, please login again to proceed")
                     .httpStatus(HttpStatus.UNAUTHORIZED)
@@ -31,7 +31,7 @@ public class AuthenticationExceptionHandler {
         }
         else if(e instanceof AccessDeniedException){
             return ErrorResponse.builder()
-                    .error("Access Denied")
+                    .error("AccessDeniedException")
                     .status(HttpStatus.FORBIDDEN.getReasonPhrase())
                     .httpStatus(HttpStatus.FORBIDDEN)
                     .errorDescription("You do not have access, login or connect with admin.").build();
