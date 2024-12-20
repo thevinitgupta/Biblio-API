@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BookListingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="JWT_SECRET" value="AOnNxT+Nn6XronoV6nEuIZDX0hl9jaDE0YdpayUZlGI=" />
+      <env name="MONGO_DB_PASSWORD" value="keIQ3uoQMabaU8qv" />
+      <env name="MONGO_DB_USERNAME" value="vinitman35" />
+      <env name="ACCESS_TOKEN_EXPIRATION" value="3600000" />
+      <env name="REFRESH_TOKEN_EXPIRATION" value="86400000" />
+      <env name="TEST_ACCESS_TOKEN_EXPIRATION" value="60000" />
+      <env name="TEST_REFRESH_TOKEN_EXPIRATION" value="300000" />
+    </envs>
+    <module name="BookListing" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="tech.biblio.BookListing.BookListingApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -76,6 +76,17 @@ public class JwtUtils {
         return null;
     }
 
+    public String getTokenIdFromJwt(String refreshToken, Environment environment){
+        if(environment!=null) {
+            String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
+                    ApplicationConstants.JWT_SECRET_DEFAULT);
+            SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(refreshToken).getPayload();
+            return (String) claims.get("token-id");
+        }
+        return null;
+    }
+
 
     public boolean validateAccessToken(String jwtToken, Environment environment){
         String validationMessage = "";
@@ -92,8 +103,9 @@ public class JwtUtils {
             validationMessage = "Invalid JWT Token";
             log.error(validationMessage+" : {}", e.getMessage());
         }catch (ExpiredJwtException e){
-            validationMessage = "Expired JWT Token";
-            log.error(validationMessage+" : {}",e.getMessage());
+            validationMessage = "";
+            log.error("Expired Access Token" +" : {}",e.getMessage());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(),"Expired Access Token");
         }catch (UnsupportedJwtException e){
             validationMessage = "JWT Token is unsupported";
             log.error(validationMessage+" : {}",e.getMessage());
@@ -124,7 +136,7 @@ public class JwtUtils {
             validationMessage = "Invalid JWT Token";
             log.error(validationMessage+" : {}", e.getMessage());
         }catch (ExpiredJwtException e){
-            validationMessage = "Expired JWT Token";
+            validationMessage = "Expired Refresh Token";
             log.error(validationMessage+" : {}",e.getMessage());
         }catch (UnsupportedJwtException e){
             validationMessage = "JWT Token is unsupported";

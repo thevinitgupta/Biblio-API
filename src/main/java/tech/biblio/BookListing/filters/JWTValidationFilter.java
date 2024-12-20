@@ -33,7 +33,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
                jwtToken = jwtToken.trim();
                Environment env = getEnvironment();
                System.out.println("Access Token : |"+jwtToken);
-               boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception is Invalid
+               boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception if Invalid, return false if Expired
                Claims claims = jwtUtils.getClaimsFromJwt(jwtToken,env);
                if(claims==null){
                    throw new BadCredentialsException("Invalid Token Received!");

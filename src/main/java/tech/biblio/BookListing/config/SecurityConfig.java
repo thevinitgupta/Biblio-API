@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import tech.biblio.BookListing.filters.*;
@@ -77,23 +77,23 @@ public class SecurityConfig {
                             config.setAllowedHeaders(List.of("*"));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             config.setAllowCredentials(true);
-                            config.setExposedHeaders(List.of(HttpHeaders.SET_COOKIE,"X-CSRF-TOKEN","_csrf")); // Expose Set-Cookie header to the client
+                            config.setExposedHeaders(List.of(HttpHeaders.SET_COOKIE)); // Expose Set-Cookie header to the client
                             config.setMaxAge(3600L);
                             return config;
                         }
                 ));
 
 
-        // Disabling CSRF
-         // http.csrf(AbstractHttpConfigurer::disable);
+        // CSRF disabled as we use stateless JWT authentication
+          http.csrf(AbstractHttpConfigurer::disable);
 
-        http.csrf(httpSecurityCsrfConfigurer ->
-                httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
-
-                .ignoringRequestMatchers(HttpMethod.OPTIONS.name(),"/auth/register", "/auth/login", "auth/access-token")
-                        .csrfTokenRepository(
-                                CookieCsrfTokenRepository.withHttpOnlyFalse()
-                        ));
+//        http.csrf(httpSecurityCsrfConfigurer ->
+//                httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
+//
+//                .ignoringRequestMatchers(HttpMethod.OPTIONS.name(),"/auth/register", "/auth/login", "auth/access-token")
+//                        .csrfTokenRepository(
+//                                CookieCsrfTokenRepository.withHttpOnlyFalse()
+//                        ));
         http.addFilterBefore(globalExceptionHandlingFilter, LogoutFilter.class);
 
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
@@ -114,7 +114,10 @@ public class SecurityConfig {
             requests.requestMatchers("/health").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
             requests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
-            requests.requestMatchers(HttpMethod.GET,"/auth/access-token").permitAll();
+            requests.requestMatchers(HttpMethod.POST,"/auth/access-token").permitAll();
+
+            // Authenticated Endpoints
+            requests.requestMatchers(HttpMethod.POST,"/auth/logout").authenticated();
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 
@@ -133,7 +136,7 @@ public class SecurityConfig {
         UsernamePasswordAuthenticationProvider authenticationProvider = new
                 UsernamePasswordAuthenticationProvider(userDetailsService,passwordEncoder);
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
-        providerManager.setEraseCredentialsAfterAuthentication(false);
+        providerManager.setEraseCredentialsAfterAuthentication(true);
         return providerManager;
     }
 

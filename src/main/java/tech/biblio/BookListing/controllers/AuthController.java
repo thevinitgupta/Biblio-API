@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import tech.biblio.BookListing.dto.*;
@@ -132,15 +131,15 @@ public class AuthController {
 
                 httpResponse.setHeader("Set-Cookie", setCookieHeader);
 
-                CsrfToken csrfToken = (CsrfToken) httpRequest.getAttribute(CsrfToken.class.getName());
-                if (csrfToken != null) {
-                    // Set XSRF-TOKEN as a cookie for the frontend
-                    String csrfCookie = String.format(
-                            "XSRF-TOKEN=%s; Path=/; Secure; SameSite=None",
-                            csrfToken.getToken()
-                    );
-                    httpResponse.setHeader("Set-Cookie", csrfCookie);
-                }
+//                CsrfToken csrfToken = (CsrfToken) httpRequest.getAttribute(CsrfToken.class.getName());
+//                if (csrfToken != null) {
+//                    // Set XSRF-TOKEN as a cookie for the frontend
+//                    String csrfCookie = String.format(
+//                            "XSRF-TOKEN=%s; Path=/; Secure; SameSite=None",
+//                            csrfToken.getToken()
+//                    );
+//                    httpResponse.setHeader("Set-Cookie", csrfCookie);
+//                }
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(new LoginResponseDTO(
@@ -227,7 +226,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("access-token")
+    @PostMapping("access-token")
     public ResponseEntity<?> generateAccessToken(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken, HttpServletRequest request){
         try {
             if(refreshToken==null || refreshToken.isEmpty()) throw new RefreshTokenValidationException("No Refresh Token found");
@@ -267,4 +266,39 @@ public class AuthController {
         return null;
     }
 
+    @PostMapping("logout")
+    public ResponseEntity<?> logoutCurrentSession(
+            @CookieValue(name = "refreshToken", defaultValue = "") String refreshToken,
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse){
+        try {
+            if(refreshToken==null || refreshToken.isEmpty()) throw new RefreshTokenValidationException("No Refresh Token found");
+
+            if(env!=null){
+                boolean refreshTokenValidation = jwtUtils.validateRefreshToken(refreshToken, env);
+                String tokenId = jwtUtils.getTokenIdFromJwt(refreshToken,env);
+                if(tokenId==null) throw new RefreshTokenValidationException("Invalid Refresh Token found");
+
+                boolean invalidated = refreshTokenService.invalidateToken(tokenId);
+                if(invalidated) {
+                    String setCookieHeader = String.format(
+                            "refreshToken=%s; HttpOnly; Secure; Path=/; Max-Age=%d; SameSite=None",
+                            null,
+                            60 * 60 // 7 days expiration
+                    );
+
+                    httpResponse.setHeader("Set-Cookie", setCookieHeader);
+
+                    return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
+                }
+                else {
+                    return new ResponseEntity<>("Something went wrong while logging out, please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+
+        }finally {
+
+        }
+        return new ResponseEntity<>("Something went wrong while logging out, please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

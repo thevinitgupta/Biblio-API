@@ -26,7 +26,7 @@ public class RefreshTokenStore {
     private String refreshToken;
 
     @NonNull
-    private String username;
+    private String username; // owner id
 
     @NonNull
     @CreatedDate
