@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public class UserMapper {
     public static  UserDTO userDTO(User user, boolean allowPosts){
-        return new UserDTO(user.getEmail(), user.getFirstName(), user.getLastName(), allowPosts ? user.getPosts() : null);
+        return new UserDTO(user.getEmail(), user.getFirstName(), user.getLastName(), allowPosts ? user.getPosts() : null, user.isProfileImageAdded(), user.getProfileImageId());
     }
     public static User userEntity(UserDTO userDTO, User dbUser){
         User user = User.builder()

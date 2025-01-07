@@ -1,4 +1,4 @@
-package tech.biblio.BookListing.contants;
+package tech.biblio.BookListing.constants;
 
 public final class ApplicationConstants {
     public static final String JWT_SECRET = "JWT_SECRET";

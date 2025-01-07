@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.dto.ErrorResponse;
+import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.exceptions.InvalidUserDetailsException;
 
 @Component
@@ -31,6 +32,14 @@ public class InvalidValueExceptionHandler {
                     .error("NumberFormatException")
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .errorDescription("Check value of Number passed")
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+        else if(ex instanceof FileTypeNotAllowedException){
+            return ErrorResponse.builder()
+                    .error("FileTypeNotAllowedException")
+                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .errorDescription(ex.getMessage())
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }

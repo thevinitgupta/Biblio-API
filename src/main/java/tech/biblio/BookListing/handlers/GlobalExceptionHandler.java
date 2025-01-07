@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.handlers;
 
+import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import tech.biblio.BookListing.dto.ErrorResponse;
 import tech.biblio.BookListing.exceptions.*;
 import tech.biblio.BookListing.utils.JsonConverter;
 
+import java.io.FileNotFoundException;
 import java.util.MissingResourceException;
 
 @RestControllerAdvice
@@ -32,7 +34,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             UserNotFoundException.class,
             PostNotFoundException.class,
-            MissingResourceException.class
+            MissingResourceException.class,
+            FileNotFoundException.class,
+            FileUploadException.class
             })
     public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e){
         ErrorResponse errorResponse = resourceExceptionHandler.handler(e);
@@ -57,7 +61,9 @@ public class GlobalExceptionHandler {
             ArrayIndexOutOfBoundsException.class,
             NumberFormatException.class,
             NullPointerException.class,
-            InvalidUserDetailsException.class
+            InvalidUserDetailsException.class,
+            FileTypeNotAllowedException.class,
+            IOException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidValueException(Exception e){
         ErrorResponse errorResponse = invalidValueExceptionHandler.handler(e);
@@ -68,8 +74,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e){
+        log.error(e.getLocalizedMessage());
         return new ResponseEntity<>(
-                "An unexpected error occurred"+e.getMessage(),
+                "An unexpected error occurred: "+e.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

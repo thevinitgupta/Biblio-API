@@ -58,25 +58,17 @@ public class PostController {
     public ResponseEntity<?> getPostsForUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        try {
-            UserDTO user = userService.getUserByEmail(email, true);
-            if(user==null) throw new UserNotFoundException("", email);
-            List<Post> userPosts = user.getPosts();
-            if(userPosts==null || userPosts.isEmpty()) {
-                throw new PostNotFoundException("No Posts found for User", user.getFirstName());
-            }
-            return new ResponseEntity<>(userPosts, HttpStatus.FOUND);
-        }catch (UserNotFoundException e){
-            System.out.println(e.getLocalizedMessage());
-            String message = "User with Email "+ email+" does not Exist";
-            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+
+        UserDTO user = userService.getUserByEmail(email, true);
+        if(user==null) throw new UserNotFoundException("", email);
+        List<Post> userPosts = user.getPosts();
+        if(userPosts==null || userPosts.isEmpty()) {
+            throw new PostNotFoundException("No Posts found for User", user.getFirstName());
         }
-        catch (Exception e){
-            System.out.println(e.getClass() + ", "+ e.getMessage()  );
-            String message = e instanceof UncategorizedMongoDbException ? "Database Error" : e.getLocalizedMessage();
-            return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(userPosts, HttpStatus.OK);
+
     }
+
 
     @PutMapping("id/{email}/{id}")
     public ResponseEntity<?> updatePost(@RequestBody Post post, @PathVariable String id, @PathVariable String email){

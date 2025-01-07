@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import tech.biblio.BookListing.contants.ApplicationConstants;
+import tech.biblio.BookListing.constants.ApplicationConstants;
 import tech.biblio.BookListing.exceptions.AccessTokenValidationException;
 import tech.biblio.BookListing.exceptions.RefreshTokenValidationException;
 

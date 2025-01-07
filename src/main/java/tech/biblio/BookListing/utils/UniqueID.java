@@ -5,4 +5,7 @@ public class UniqueID {
     public static String generateId() {
         return UUID.randomUUID().toString();
     }
+    public static String generateLongId(){
+        return  UUID.randomUUID().toString();
+    }
 }

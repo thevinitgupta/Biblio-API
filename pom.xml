@@ -72,6 +72,18 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.appwrite/sdk-for-kotlin -->
+		<dependency>
+			<groupId>io.appwrite</groupId>
+			<artifactId>sdk-for-kotlin</artifactId>
+			<version>6.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.19</version>
+		</dependency>
 
 
 	</dependencies>
