@@ -181,6 +181,7 @@ public class AuthController {
                     .email(registerRequest.email())
                     .password(registerRequest.password())
                     .posts(new ArrayList<Post>())
+                    .profileImageAdded(false)
                     .build();
             AuthenticationUser authenticationUser = UserMapper.authUser(user,roleService.getRoles("ROLE_USER"), passwordEncoder);
             savedUser = userService.addUser(user);
@@ -191,7 +192,7 @@ public class AuthController {
             StringBuilder saveMessage = new StringBuilder()
                     .append("User with email : ")
                     .append(savedUser.getEmail())
-                    .append(" saved successfully");
+                    .append("Saved successfully");
             return new ResponseEntity<>(new RegisterResponseDTO(
                     HttpStatus.CREATED.getReasonPhrase(),
                     saveMessage.toString()

@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tech.biblio.BookListing.contants.ApplicationConstants;
+import tech.biblio.BookListing.constants.ApplicationConstants;
 import tech.biblio.BookListing.utils.JwtUtils;
 
 import java.io.IOException;

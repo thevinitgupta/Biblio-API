@@ -18,4 +18,8 @@ public class UserDTO {
     private String lastName;
 
     private List<Post> posts;
+
+    private boolean profileImageAdded;
+
+    private String profileImageId;
 }

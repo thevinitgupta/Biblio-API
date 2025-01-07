@@ -32,6 +32,10 @@ public class User implements UserDetails {
     @DBRef
     private List<Post> posts = new ArrayList<>();
 
+    private boolean profileImageAdded;
+    @NonNull
+    private String profileImageId;
+
     @DBRef
     public Collection<Role> roles;
 

@@ -1,15 +1,20 @@
 package tech.biblio.BookListing.controllers;
 
 import com.mongodb.MongoException;
+import io.appwrite.exceptions.AppwriteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.biblio.BookListing.dto.UserDTO;
+import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.services.UserService;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 
 @RestController
@@ -56,6 +61,38 @@ public class UserController {
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/profileImage")
+    public ResponseEntity<?> getProfileImage() throws AppwriteException, ExecutionException, InterruptedException {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String email = authentication.getName();
+            UserDTO user = userService.getUserByEmail(email, false);
+
+            if(user==null) {
+                return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
+            }
+            byte [] fileBytes = userService.getUserProfileImage(user);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
+            headers.setContentDisposition(ContentDisposition.builder("attachment").filename(email.split("@")[0].replace(".","_")+"_profile_img.png").build());
+            return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/profileImage")
+    public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile multipartFile) throws AppwriteException, IOException, ExecutionException, InterruptedException, FileTypeNotAllowedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        boolean imageUploaded = userService.uploadProfileImage(multipartFile, email);
+        if(imageUploaded){
+            return new ResponseEntity<>("Successfully Uploaded",HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Image Upload Failed!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tech.biblio.BookListing.contants.ApplicationConstants;
+import tech.biblio.BookListing.constants.ApplicationConstants;
 import tech.biblio.BookListing.utils.JwtUtils;
 
 import java.io.IOException;
