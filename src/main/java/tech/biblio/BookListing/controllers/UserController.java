@@ -95,4 +95,25 @@ public class UserController {
             return new ResponseEntity<>("Image Upload Failed!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @DeleteMapping("/profileImage")
+    public ResponseEntity<?> deleteProfileImage() throws AppwriteException, IOException, ExecutionException, InterruptedException, FileTypeNotAllowedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+        UserDTO dbUser = userService.getUserByEmail(email, false);
+
+        if(!dbUser.isProfileImageAdded()){
+            return new ResponseEntity<>("Profile Image doesn't exist",HttpStatus.BAD_REQUEST);
+        }
+
+        boolean imageDeleted = userService.deleteProfileImage(dbUser);
+        if(imageDeleted){
+            return new ResponseEntity<>("Successfully Deleted",HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Image Delete Failed!",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
