@@ -58,6 +58,11 @@ public class UserService {
         return userRepository.save(dbUser);
     }
 
+    public boolean checkUserExists(String email){
+        User dbUser = userRepository.findFirstByEmail(email);
+        return dbUser != null;
+    }
+
     public  List<UserDTO> getAll(){
         return userRepository.findAll().stream().map(user -> UserMapper.userDTO(user,false)).toList();
     }
