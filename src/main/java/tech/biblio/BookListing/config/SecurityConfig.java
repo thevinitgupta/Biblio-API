@@ -1,6 +1,7 @@
 package tech.biblio.BookListing.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,10 @@ import java.util.List;
         debug = true
 )
 public class SecurityConfig {
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     private UserDetailsService userDetailsService;
     @Autowired
     private GlobalExceptionHandlingFilter globalExceptionHandlingFilter;
@@ -72,7 +77,7 @@ public class SecurityConfig {
                 httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(request ->
                         {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.addAllowedOrigin("http://localhost:3000");
+                            config.addAllowedOrigin(frontendUrl);
 //                            config.addAllowedOrigin("http://localhost:3000");
                             config.setAllowedHeaders(List.of("*"));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
