@@ -124,6 +124,9 @@ public class SecurityConfig {
             requests.requestMatchers("/posts/**").authenticated();
 
             requests.requestMatchers("/admin/**").authenticated();
+
+            // books api
+            requests.requestMatchers("/book/**").authenticated();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());

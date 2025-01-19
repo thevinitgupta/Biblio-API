@@ -1,0 +1,116 @@
+{
+  "items": [
+    {
+      "id": "6cguEAAAQBAJ",
+      "volumeInfo": {
+        "title": "Har Dayal: The Great Revolutionary",
+        "authors": [
+          "E. Jaiwant Paul",
+          "Shubh Paul"
+        ],
+        "publishedDate": "2003-01-01",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9788194566144"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "8194566142"
+          }
+        ],
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=6cguEAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=6cguEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        }
+      }
+    },
+    {
+      "id": "1YVLAwAAQBAJ",
+      "volumeInfo": {
+        "title": "God, Heaven, and Har Magedon",
+        "subtitle": "A Covenantal Tale of Cosmos and Telos",
+        "authors": [
+          "Meredith G. Kline"
+        ],
+        "publishedDate": "2006-03-15",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781597524780"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1597524786"
+          }
+        ],
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=1YVLAwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=1YVLAwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        }
+      }
+    },
+    {
+      "id": "Lk_HDwAAQBAJ",
+      "volumeInfo": {
+        "title": "Mental tr�ning kan avsl�ja styrkorna du har och omr�den du kan f�rb�ttra",
+        "authors": [
+          "Stig-Arne Kristoffersen"
+        ],
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781794808027"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1794808027"
+          }
+        ],
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=Lk_HDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=Lk_HDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        }
+      }
+    },
+    {
+      "id": "yV__AAAAQBAJ",
+      "volumeInfo": {
+        "title": "Har-Moni's Story",
+        "authors": [
+          "Joy Lee Larocque"
+        ],
+        "publishedDate": "1984-01-01",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781622337149"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "162233714X"
+          }
+        ],
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=yV__AAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=yV__AAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        }
+      }
+    },
+    {
+      "id": "_A8VEAAAQBAJ",
+      "volumeInfo": {
+        "title": "Biography of Har Gobind Khorana",
+        "subtitle": "Biography of Har Gobind Khorana: A Nobel Laureate's Inspiring Story",
+        "authors": [
+          "Nandini"
+        ],
+        "publishedDate": "2021-02-01",
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=_A8VEAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=_A8VEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        }
+      }
+    }
+  ]
+}
