@@ -1,18 +1,15 @@
 package tech.biblio.BookListing.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public class BookInfo {
-    public BookInfo(){
-
-    }
     private String title;
 //    private String subtitle;
     private List<String> authors;

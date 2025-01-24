@@ -17,6 +17,7 @@ import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.mappers.PostMapper;
+import tech.biblio.BookListing.services.BookService;
 import tech.biblio.BookListing.services.PostService;
 import tech.biblio.BookListing.services.UserService;
 
@@ -32,6 +33,9 @@ public class PostController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BookService bookService;
+
 //    @GetMapping
 //    public ResponseEntity<?> getAll(){
 //        try {
@@ -46,14 +50,8 @@ public class PostController {
     public ResponseEntity<?> createPost(@RequestBody CreatePostDTO createPostDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Post post = Post.builder()
-                        .title(createPostDTO.title())
-                        .content(createPostDTO.content())
-                        .likes(0)
-                        .comments(new String[]{})
-                        .build();
-        System.out.println(post.toString());
-        Post savedPost = postService.addPost(email,post);
+
+        Post savedPost = postService.addPost(email,createPostDTO);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
 
     }

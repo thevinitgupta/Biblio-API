@@ -1,17 +1,23 @@
 package tech.biblio.BookListing.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Document("book")
+@Builder
 public class Book {
-    public Book() {
+    @Id
+    private ObjectId id;
 
-    }
-    private String id;
+    @Indexed(unique = true)
+    private String bookId;
 
-    @JsonProperty("volumeInfo")
+    @NonNull
     private BookInfo bookInfo;
 }

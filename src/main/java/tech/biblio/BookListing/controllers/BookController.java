@@ -32,6 +32,6 @@ public class BookController {
                     new ResponseDTO(HttpStatus.BAD_REQUEST.getReasonPhrase(),"Empty Search String"),
                     HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(googleBooksUtil.getBooksData(query+"&maxResults=5", googleBooksApiKey), HttpStatus.OK );
+        return new ResponseEntity<>(googleBooksUtil.getBooksData(query, googleBooksApiKey), HttpStatus.OK );
     }
 }

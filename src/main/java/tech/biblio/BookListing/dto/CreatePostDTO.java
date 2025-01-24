@@ -1,4 +1,6 @@
 package tech.biblio.BookListing.dto;
 
-public record CreatePostDTO(String title, String content) {
+import tech.biblio.BookListing.entities.Book;
+
+public record CreatePostDTO(String title, String content, Book taggedBook) {
 }

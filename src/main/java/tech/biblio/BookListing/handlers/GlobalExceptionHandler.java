@@ -36,7 +36,8 @@ public class GlobalExceptionHandler {
             PostNotFoundException.class,
             MissingResourceException.class,
             FileNotFoundException.class,
-            FileUploadException.class
+            FileUploadException.class,
+            BookUploadException.class
             })
     public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e){
         ErrorResponse errorResponse = resourceExceptionHandler.handler(e);
