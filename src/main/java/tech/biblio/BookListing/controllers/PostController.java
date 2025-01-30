@@ -1,19 +1,22 @@
 package tech.biblio.BookListing.controllers;
 
+import io.appwrite.exceptions.AppwriteException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.biblio.BookListing.dto.CreatePostDTO;
 import tech.biblio.BookListing.dto.FetchPostDTO;
 import tech.biblio.BookListing.dto.PostDTO;
 import tech.biblio.BookListing.dto.UserDTO;
 import tech.biblio.BookListing.entities.Post;
+import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
 import tech.biblio.BookListing.mappers.PostMapper;
@@ -21,7 +24,9 @@ import tech.biblio.BookListing.services.BookService;
 import tech.biblio.BookListing.services.PostService;
 import tech.biblio.BookListing.services.UserService;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 @RestController
@@ -79,9 +84,11 @@ public class PostController {
                 throw new PostNotFoundException("The Post you are requesting does not exist", email);
             }
 
+//            Book postBook = bookService.getBookById(userPost.getBook().getId());
+
             return new ResponseEntity<>(new FetchPostDTO(
                     HttpStatus.OK.getReasonPhrase(),
-                    PostMapper.postDTO(userPost)
+                    PostMapper.postDTOWithBook(userPost)
             ), HttpStatus.OK);
         }
 
@@ -115,28 +122,36 @@ public class PostController {
             return new ResponseEntity<>(message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-/*
-    @GetMapping
-    public ResponseEntity<?> getPostById(@RequestParam String postId){
+
+    @PostMapping("/image")
+    public ResponseEntity<?> uploadPostImage(@RequestParam("file") MultipartFile multipartFile) throws AppwriteException, IOException, ExecutionException, InterruptedException, FileTypeNotAllowedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         String email = authentication.getName();
-        boolean isValidUser = userService.checkUserExists(email);
-        if(!isValidUser) throw new UserNotFoundException("", email);
 
-        if(postId==null || !ObjectId.isValid(postId)){
-            throw new PostNotFoundException("Invalid post id, please check again", email);
+        String imageUploaded = postService.uploadPostImage(multipartFile, email);
+        if(!imageUploaded.isEmpty()){
+            return new ResponseEntity<>("{\n" +
+                    "\"postImage\" :\""+imageUploaded+"\""+
+                    "\n}",HttpStatus.OK);
         }
-        Post userPost = null;
-        userPost = postService.getById(postId);
-
-        if(userPost==null){
-            throw new PostNotFoundException("The Post you are requesting does not exist", email);
+        else {
+            return new ResponseEntity<>("{\n" +
+                    "\"postImage\" :\"Image Upload Failed\""+
+                    "\n}",HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(new FetchPostDTO(
-                HttpStatus.OK.getReasonPhrase(),
-                userPost
-        ), HttpStatus.OK);
     }
-    */
 
+    @GetMapping("/image/{id}")
+    public ResponseEntity<?> fetchPostImage(@PathVariable String id) throws AppwriteException, IOException, ExecutionException, InterruptedException, FileTypeNotAllowedException, MissingRequestValueException {
+
+        if(id==null || id.isEmpty()){
+            throw new MissingRequestValueException("Image ID not provided");
+        }
+        byte [] fileBytes = postService.getPostImage(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("post_img.png").build());
+        return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+    }
 }

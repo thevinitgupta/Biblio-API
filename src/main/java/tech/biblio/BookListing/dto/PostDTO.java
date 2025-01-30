@@ -1,6 +1,8 @@
 package tech.biblio.BookListing.dto;
 
-public record PostDTO(String id, String title, String content, int likes, String[] comments) {
+import tech.biblio.BookListing.entities.Book;
+
+public record PostDTO(String id, String title, String content, int likes, String[] comments, Book book, String coverImage) {
     public static PostDTOBuilder builder() {
         return new PostDTOBuilder();
     }
@@ -10,6 +12,10 @@ public record PostDTO(String id, String title, String content, int likes, String
         private String content;
         private int likes;
         private String[] comments;
+
+        private Book book;
+
+        private String coverImage;
 
         public PostDTOBuilder id(String id) {
             this.id = id;
@@ -36,8 +42,18 @@ public record PostDTO(String id, String title, String content, int likes, String
             return this;
         }
 
+        public PostDTOBuilder book(Book book){
+            this.book = book;
+            return this;
+        }
+
+        public PostDTOBuilder coverImage(String coverImage){
+            this.coverImage = coverImage;
+            return this;
+        }
+
         public PostDTO build() {
-            return new PostDTO(id, title, content, likes, comments);
+            return new PostDTO(id, title, content, likes, comments, book, coverImage);
         }
     }
 }

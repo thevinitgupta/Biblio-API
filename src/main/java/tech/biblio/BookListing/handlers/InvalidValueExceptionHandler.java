@@ -3,6 +3,7 @@ package tech.biblio.BookListing.handlers;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.MissingRequestValueException;
 import tech.biblio.BookListing.dto.ErrorResponse;
 import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.exceptions.InvalidUserDetailsException;
@@ -42,8 +43,14 @@ public class InvalidValueExceptionHandler {
                     .errorDescription(ex.getMessage())
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
-        }
-        else if(ex instanceof NullPointerException){
+        }else if(ex instanceof MissingRequestValueException){
+            return ErrorResponse.builder()
+                    .error("MissingRequestValueException")
+                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .errorDescription(ex.getMessage())
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+        } else if(ex instanceof NullPointerException){
             System.out.println(ex);
             return ErrorResponse.builder()
                     .error("NullPointerException")

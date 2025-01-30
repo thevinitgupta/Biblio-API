@@ -22,6 +22,8 @@ public class Post {
     @DBRef
     private Book book;
 
+    private String coverImage;
+
     public void updateData(Post newPost) {
         BeanUtils.copyProperties(newPost, this, "id");
     }
