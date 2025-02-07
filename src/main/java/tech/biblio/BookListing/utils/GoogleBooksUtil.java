@@ -22,7 +22,8 @@ public class GoogleBooksUtil {
 
         // Make the API call and return the response as a string
 
-//        return restTemplate.getForObject(apiUrl, String.class);
+        return restTemplate.getForObject(apiUrl, String.class);
+        /*
         return """
 {
   "items": [
@@ -478,7 +479,7 @@ public class GoogleBooksUtil {
 }
                 
                 """;
-
+*/
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.biblio.BookListing.annotations.RateLimited;
 import tech.biblio.BookListing.dto.ResponseDTO;
 import tech.biblio.BookListing.exceptions.GoogleApiBooksException;
 import tech.biblio.BookListing.utils.GoogleBooksUtil;
@@ -24,6 +25,7 @@ public class BookController {
     @Value("${GOOGLE_BOOKS_API_KEY}")
     private String googleBooksApiKey;
 
+    @RateLimited
     @GetMapping("search")
     public ResponseEntity<?> searchBooks(@RequestParam String query) throws GoogleApiBooksException {
         System.out.println("Google Books API Key : "+googleBooksApiKey);

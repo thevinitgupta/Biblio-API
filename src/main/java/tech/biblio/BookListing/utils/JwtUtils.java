@@ -150,4 +150,14 @@ public class JwtUtils {
         }
         return false;
     }
+
+
+    public String getUsernameFromAccessToken(String jwtToken, String secret){
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        return String.valueOf(
+                Jwts.parser()
+                        .verifyWith(secretKey).build()
+                        .parseSignedClaims(jwtToken).getPayload()
+                        .get("username"));
+    }
 }
