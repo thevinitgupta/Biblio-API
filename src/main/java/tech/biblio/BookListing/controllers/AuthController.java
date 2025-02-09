@@ -228,9 +228,13 @@ public class AuthController {
     }
 
     @PostMapping("access-token")
-    public ResponseEntity<?> generateAccessToken(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken, HttpServletRequest request){
+    public ResponseEntity<?> generateAccessToken(
+            @CookieValue(name = "refreshToken", defaultValue = "") String refreshToken,
+            HttpServletRequest request){
         try {
-            if(refreshToken==null || refreshToken.isEmpty()) throw new RefreshTokenValidationException("No Refresh Token found");
+            if(refreshToken==null || refreshToken.isEmpty())
+                throw new RefreshTokenValidationException("No Refresh Token found");
+
             if(env!=null){
                 boolean validateTokenFormat = jwtUtils.validateRefreshToken(refreshToken, env);
                 final Claims claimsFromJwt = jwtUtils.getClaimsFromJwt(refreshToken, env);
@@ -239,14 +243,17 @@ public class AuthController {
                 /*
                  COMPLETED : 1. Remove User details being passed to Token Generators, pass only Username and if Required Authorities
                  COMPLETED : 2. Add access token generation
+                 TODO : 3. Move Token Building Logic to service class
                 */
                 if(validateTokenFormat && validateDbToken){
                     String accessToken = "";
-                    UserDTO user = userService.getUserByEmail(claimsFromJwt.get("username", String.class), false);
+                    UserDTO user = userService.getUserByEmail(
+                            claimsFromJwt.get("username", String.class), false);
 
                     HashMap<String, Object> accessTokenClaims = new HashMap<>();
                     accessTokenClaims.put("username", user.getEmail());
-                    accessTokenClaims.put("authorities", userService.getUserAuthorities(user.getEmail())
+                    accessTokenClaims.put("authorities", userService.getUserAuthorities(
+                            user.getEmail())
                             .stream().map(GrantedAuthority::getAuthority)
                             .collect(Collectors.joining(",")));
 

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.dto.ErrorResponse;
+import tech.biblio.BookListing.exceptions.BookUploadException;
 import tech.biblio.BookListing.exceptions.FileUploadException;
 import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
@@ -53,6 +54,14 @@ public class ResourceExceptionHandler {
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .errorDescription("Error Uploading File to storage").build();
+        }
+        if(e instanceof BookUploadException){
+            return ErrorResponse.builder()
+                    .error("BookUploadException")
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                    .errorDescription("Book upload failed. Please try again.")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
         }
         else if(e instanceof IOException){
             return ErrorResponse.builder()

@@ -14,6 +14,7 @@ import tech.biblio.BookListing.dto.ErrorResponse;
 import tech.biblio.BookListing.handlers.AuthenticationExceptionHandler;
 import tech.biblio.BookListing.handlers.InvalidValueExceptionHandler;
 import tech.biblio.BookListing.handlers.ResourceExceptionHandler;
+import tech.biblio.BookListing.handlers.ServicesExceptionalHandler;
 import tech.biblio.BookListing.utils.JsonConverter;
 
 import java.io.IOException;
@@ -34,6 +35,9 @@ public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
     @Autowired
     public InvalidValueExceptionHandler invalidValueExceptionHandler;
 
+    @Autowired
+    public ServicesExceptionalHandler servicesExceptionalHandler;
+
 
     private void handleException(HttpServletResponse response, Exception ex) throws IOException {
         JsonConverter jsonConverter = new JsonConverter();
@@ -45,6 +49,9 @@ public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
         }
         if(errorResponse==null){
             errorResponse = invalidValueExceptionHandler.handler(ex);
+        }
+        if(response==null){
+            errorResponse = servicesExceptionalHandler.handler(ex);
         }
         if(errorResponse==null){
             log.error("Unknown Exception in filter : {}, {}", ex.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));

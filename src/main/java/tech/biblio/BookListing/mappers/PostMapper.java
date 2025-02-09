@@ -12,6 +12,18 @@ public class PostMapper {
                 .content(post.getContent())
                 .comments(post.getComments())
                 .likes(post.getLikes())
+                .coverImage(post.getCoverImage())
+                .build();
+    }
+    public static PostDTO postDTOWithBook(Post post){
+        return PostDTO.builder()
+                .id(post.getId().toHexString())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .comments(post.getComments())
+                .likes(post.getLikes())
+                .book(post.getBook())
+                .coverImage(post.getCoverImage())
                 .build();
     }
 }

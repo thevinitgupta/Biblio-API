@@ -1,5 +1,6 @@
 package tech.biblio.BookListing.handlers;
 
+import io.appwrite.exceptions.AppwriteException;
 import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class GlobalExceptionHandler {
     public InvalidValueExceptionHandler invalidValueExceptionHandler;
 
     @Autowired
+    public ServicesExceptionalHandler servicesExceptionalHandler;
+
+    @Autowired
     public JsonConverter jsonConverter;
 
     @ExceptionHandler({
@@ -36,7 +40,8 @@ public class GlobalExceptionHandler {
             PostNotFoundException.class,
             MissingResourceException.class,
             FileNotFoundException.class,
-            FileUploadException.class
+            FileUploadException.class,
+            BookUploadException.class
             })
     public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e){
         ErrorResponse errorResponse = resourceExceptionHandler.handler(e);
@@ -52,6 +57,17 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleResourceException(Exception e){
         ErrorResponse errorResponse = authenticationExceptionHandler.handler(e);
+        log.error(jsonConverter.getJsonObject(errorResponse));
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
+    }
+
+    @ExceptionHandler({
+            AppwriteException.class,
+            GoogleApiBooksException.class,
+            RateLimitExceededException.class
+    })
+    public ResponseEntity<ErrorResponse> handleServicesException(Exception e){
+        ErrorResponse errorResponse = servicesExceptionalHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }

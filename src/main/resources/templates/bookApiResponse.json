@@ -1,0 +1,763 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 1873,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "_eyJAAAAQBAJ",
+      "etag": "HBTVQjWoy7Q",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/_eyJAAAAQBAJ",
+      "volumeInfo": {
+        "title": "A Quilting Life",
+        "subtitle": "Creating a Handmade Home",
+        "authors": [
+          "Sherri McConnell"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2013-02-12",
+        "description": "“With its diverse selection of fabrics and designs, A Quilting Life is a fine pick for any quilter looking to produce family-oriented keepsake results.” —The Needlecraft Shelf Bring the handmade tradition home with these charming quilts and home accessories. Inspired by a grandmother who loved to sew for her family, quilter and blogger Sherri McConnell gives traditional patterns like hexagons, stars, snowballs, and Dresden Plates a new look featuring fabrics by some of today’s most popular designers. Nineteen cozy projects include pillows, tote bags, table runners, and larger quilts—quick and easy designs that make great gifts. “Sherri’s book is a treasure! It’s full of fun and straight-forward patterns for quilts, table toppers, pillows, bags and more—all the goodies to make a cozy home.” —Thimbleanna “Would you like the opportunity to make tomorrow’s heirlooms in today’s vast selection of prints? . . . If so, this could be the reference book that will get you started. There are 19 projects, mainly focusing on handmade household items but including some larger quilts too.” —Fabrications Quilting for You “Beautiful inspiration if you are a seasoned quilter, but also a great resource with clear and in some cases, simple patterns for newbies as well.” —Diary of a Quilter “Color photos of finished needlework projects accompany step-by-step diagrams and assembly patterns, while at-a-glance sidebars covering materials and cutting allow needleworkers to gauge the complexity of each project.” —The Needlecraft Shelf",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781607056607"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1607056607"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 84,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.7.6.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=_eyJAAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=_eyJAAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=_eyJAAAAQBAJ&printsec=frontcover&dq=quilting&hl=&cd=1&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=_eyJAAAAQBAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/A_Quilting_Life.html?hl=&id=_eyJAAAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/A_Quilting_Life-sample-epub.acsm?id=_eyJAAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=_eyJAAAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": ". . . If so, this could be the reference book that will get you started."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "_sXaDwAAQBAJ",
+      "etag": "lQfglehoPA0",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/_sXaDwAAQBAJ",
+      "volumeInfo": {
+        "title": "Labor of Love",
+        "subtitle": "Scrappy Quilts at the Heart of Home",
+        "authors": [
+          "Sherri L. McConnell"
+        ],
+        "publisher": "Martingale",
+        "publishedDate": "2020-05-01",
+        "description": "Like you, Sherri McConnell loves to quilt and fill her home with special creations. Online influencer, fabric designer, and quilt designer Sherri reveals her fresh and simple approach to scrap quilting in step-by-step instructions for a dozen splendidly scrappy projects. From small wall hangings and table toppers to larger throws and bed quilts, Sherri shares not only her patterns but also her tips for sewing success, for saving time (and using the time you have wisely), and for collecting, storing, and--best of all--using the scraps of fabric you treasure.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781683560906"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1683560906"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 183,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "1.4.4.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=_sXaDwAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=_sXaDwAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=_sXaDwAAQBAJ&dq=quilting&hl=&cd=2&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=_sXaDwAAQBAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Labor_of_Love.html?hl=&id=_sXaDwAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true
+        },
+        "pdf": {
+          "isAvailable": true
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=_sXaDwAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Like you, Sherri McConnell loves to quilt and fill her home with special creations."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "pcuQswEACAAJ",
+      "etag": "ATWsB+3LXWg",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/pcuQswEACAAJ",
+      "volumeInfo": {
+        "title": "Plan to Quilt",
+        "subtitle": "Quilt to Plan",
+        "authors": [
+          "Shannon Gillman Orr"
+        ],
+        "publishedDate": "2017-10-29",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "1532356463"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781532356469"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=pcuQswEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=pcuQswEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=pcuQswEACAAJ&dq=quilting&hl=&cd=3&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=pcuQswEACAAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Plan_to_Quilt.html?hl=&id=pcuQswEACAAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=pcuQswEACAAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "9YIKAQAAQBAJ",
+      "etag": "C2iRyJCy8R8",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/9YIKAQAAQBAJ",
+      "volumeInfo": {
+        "title": "Scrap Quilting with Alex Anderson",
+        "subtitle": "Choose the Best Fabric Combinations • Pick the Perfect Blocks • Settings to Showcase Your Blocks",
+        "authors": [
+          "Alex Anderson"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2013-09-01",
+        "description": "Get scrappy with best-selling author Alex Anderson (more than 950,000 books sold!) Use your stash and your scrap bin to make 7 colorful quilts. Get in on Alex’s best scrap quilting secrets: which blocks and settings work best in scrappy quilts; how to combine fabric colors, prints, and values so your creations look exciting, not overpowering; and how to choose quilting motifs that will highlight your design. Includes complete instructions for 6 one-block scrap quilts, plus bonus sampler quilt and an inspiring gallery of 11 contemporary and antique scrap quilts. All quilts are easy enough for confident beginners.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781607057567"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1607057565"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 84,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.4.4.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=9YIKAQAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=9YIKAQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=9YIKAQAAQBAJ&printsec=frontcover&dq=quilting&hl=&cd=4&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=9YIKAQAAQBAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Scrap_Quilting_with_Alex_Anderson.html?hl=&id=9YIKAQAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/Scrap_Quilting_with_Alex_Anderson-sample-epub.acsm?id=9YIKAQAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=9YIKAQAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Get scrappy with best-selling author Alex Anderson (more than 950,000 books sold!) Use your stash and your scrap bin to make 7 colorful quilts."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "qwxoBAAAQBAJ",
+      "etag": "2yI5nOvr3J0",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/qwxoBAAAQBAJ",
+      "volumeInfo": {
+        "title": "Quilt As-You-Go Made Modern",
+        "subtitle": "Fresh Techniques for Busy Quilters",
+        "authors": [
+          "Jera Brandvig"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2014-10-01",
+        "description": "Learn to create modern quilts more quickly and easily than ever with this popular method, featuring thirteen projects and twenty-five bonus ideas. Do you believe rules were meant to be broken? If so, this improvisational quilt-as-you-go technique is for you. Instead of dealing with precise paper patterns and cutting measurements, you’ll learn how to piece fabric onto small, manageable batting blocks. Let your creative juices flow as you quilt directly on the blocks (not the whole quilt!), whether in large abstract zigzags or small structured stitches. After the blocks have been joined, all you need to do is add backing fabric and binding, and—voila—it’s finished! A modern approach to quilting that’s fresh, fun, and simpler than it sounds; it will change the way you quilt (for the better) Great for moms or anyone with a busy schedule—these thirteen projects are easy to transport because they make it simple to pick up where you left off Go your own way: This method allows you to use a pattern or improvise, creating a wide variety of design options Save money! Learn how to finish your own quilts without the use of a longarm professional “Quilting is easier than ever with Jera Brandvig’s modern spin on the popular quilt-as-you-go technique.” —Modern Quilts Unlimited “Quilt-as-you-go (QAYG) is one of those techniques that every quilter is curious about trying, but can be daunting as the process is so different to the traditional process of making a quilt top and then quilting it. . . . The book introduces the technique very thoroughly, so you can clearly understand the difference between traditional piecing and quilting and QAYG. Then there’s a great selection of gorgeous quilts that are sure to appeal to the modern quilter. A must if you’ve ever thought about trying QAYG and haven’t had a clue where to start.” —Make Modern Magazine",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781607059028"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1607059029"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 116,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": true,
+        "contentVersion": "1.8.8.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=qwxoBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=qwxoBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=qwxoBAAAQBAJ&printsec=frontcover&dq=quilting&hl=&cd=5&source=gbs_api",
+        "infoLink": "https://play.google.com/store/books/details?id=qwxoBAAAQBAJ&source=gbs_api",
+        "canonicalVolumeLink": "https://play.google.com/store/books/details?id=qwxoBAAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "FOR_SALE",
+        "isEbook": true,
+        "listPrice": {
+          "amount": 818.92,
+          "currencyCode": "INR"
+        },
+        "retailPrice": {
+          "amount": 409.46,
+          "currencyCode": "INR"
+        },
+        "buyLink": "https://play.google.com/store/books/details?id=qwxoBAAAQBAJ&rdid=book-qwxoBAAAQBAJ&rdot=1&source=gbs_api",
+        "offers": [
+          {
+            "finskyOfferType": 1,
+            "listPrice": {
+              "amountInMicros": 818920000,
+              "currencyCode": "INR"
+            },
+            "retailPrice": {
+              "amountInMicros": 409460000,
+              "currencyCode": "INR"
+            }
+          }
+        ]
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/Quilt_As_You_Go_Made_Modern-sample-epub.acsm?id=qwxoBAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=qwxoBAAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": ". . . The book introduces the technique very thoroughly, so you can clearly understand the difference between traditional piecing and quilting and QAYG."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "AR7UDwAAQBAJ",
+      "etag": "P8bQ7hCKOAg",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/AR7UDwAAQBAJ",
+      "volumeInfo": {
+        "title": "Sew Very Easy Quilt Favorites",
+        "subtitle": "12 Skill-Building Projects from Laura Coia",
+        "authors": [
+          "Laura Coia"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2020-03-25",
+        "description": "Learn quilting basics from a YouTube sensation and practice your skills with 12 fun projects suitable for all skill levels. Her instructional videos have inspired thousands to start sewing. Now for the first time, sew-lebrity Laura Coia shares written patterns for the most loved video tutorials on her “Sew Very Easy” YouTube channel! Learn the basics of quilt making, from cutting and pressing to borders and finishing. Then practice your skills with a dozen beautiful projects—quilts you’ll come back to time and time again—all suitable for beginners and beyond.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781617459269"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1617459267"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 67,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.5.5.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=AR7UDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=AR7UDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=AR7UDwAAQBAJ&printsec=frontcover&dq=quilting&hl=&cd=6&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=AR7UDwAAQBAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Sew_Very_Easy_Quilt_Favorites.html?hl=&id=AR7UDwAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/Sew_Very_Easy_Quilt_Favorites-sample-epub.acsm?id=AR7UDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=AR7UDwAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Her instructional videos have inspired thousands to start sewing. Now for the first time, sew-lebrity Laura Coia shares written patterns for the most loved video tutorials on her “Sew Very Easy” YouTube channel!"
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "PyaMBQAAQBAJ",
+      "etag": "pLsEuQvNqSo",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/PyaMBQAAQBAJ",
+      "volumeInfo": {
+        "title": "Step-by-Step Free-Motion Quilting",
+        "subtitle": "Turn 9 Simple Shapes into 80+ Distinctive Designs • Best-selling author of First Steps to Free-Motion Quilting",
+        "authors": [
+          "Christina Cameli"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2015-01-01",
+        "description": "Improve your free-motion quilting as you sketch new designs—one simple shape at a time. Christina Cameli, best-selling author of First Steps to Free-Motion Quilting, returns with the perfect companion book to help you quilt unique patterns, using your home machine or longarm. A member of the Portland Modern Quilt Guild, Christina infuses her fresh aesthetic and passion for teaching quilters new skills into 80+ innovative free-motion designs. Working from a set of nine simple shapes, such as circles, wavy lines, and loops, she walks you through the basic elements via easy-to-doodle illustrations. Take the design power to your needle as you stitch Christina’s favorite continuous-line quilting patterns, ranging from straightforward to striking. If you can doodle, you can do it!",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781617450259"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1617450251"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": false
+        },
+        "pageCount": 196,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": true,
+        "contentVersion": "0.6.5.0.preview.2",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=PyaMBQAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=PyaMBQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=PyaMBQAAQBAJ&printsec=frontcover&dq=quilting&hl=&cd=7&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=PyaMBQAAQBAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Step_by_Step_Free_Motion_Quilting.html?hl=&id=PyaMBQAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/Step_by_Step_Free_Motion_Quilting-sample-epub.acsm?id=PyaMBQAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=PyaMBQAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Christina Cameli, best-selling author of First Steps to Free-Motion Quilting, returns with the perfect companion book to help you quilt unique patterns, using your home machine or longarm."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "PkWgwgEACAAJ",
+      "etag": "y1PQ5Br3KHo",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/PkWgwgEACAAJ",
+      "volumeInfo": {
+        "title": "Free-Motion Quilting 101",
+        "authors": [
+          "Ashley Nickels"
+        ],
+        "publisher": "Taunton Press",
+        "publishedDate": "2019",
+        "description": "Quilters want to finish their quilts--and that means doing their own machine quilting. In Free-Motion Quilting 101, teacher and quilter Ashley Nickels provides in-depth instruction on learning the technique of free-motion quilting, combined with simple small projects that reinforce the technique. Quilters will have fun while learning the necessary steps to complete a quilting project. Free-Motion Quilting 101 is divided into three parts--workbook-style practice; project session and in-depth reference for finishing a quilt 15 foundational designs 3 simple projects and 1 larger project that is a culmination of the techniques learned in the book Free-Motion Quilting 101 is squarely on mastering the technique on a regular home sewing machine and will be the book new quilters pick up first to learn how to free-motion quilt successfully.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "1641550023"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781641550024"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 112,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=PkWgwgEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=PkWgwgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=PkWgwgEACAAJ&dq=quilting&hl=&cd=8&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=PkWgwgEACAAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Free_Motion_Quilting_101.html?hl=&id=PkWgwgEACAAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=PkWgwgEACAAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Free-Motion Quilting 101 is squarely on mastering the technique on a regular home sewing machine and will be the book new quilters pick up first to learn how to free-motion quilt successfully."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "vS7ElpLojTMC",
+      "etag": "dc0alDUgm3c",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/vS7ElpLojTMC",
+      "volumeInfo": {
+        "title": "The Ultimate Guide to Longarm Machine Quilting",
+        "subtitle": "How to Use Any Longarm Machine : Techniques, Patterns & Pantographs : Starting a Business : Hiring a Longarm Machine Quilter",
+        "authors": [
+          "Linda V. Taylor"
+        ],
+        "publisher": "C&T Publishing Inc",
+        "publishedDate": "2002-01-01",
+        "description": "Learn the basics of longarm quilting and longarm machines, plus the business of quilting and great new quilting designs!",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "157120184X"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781571201843"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": true
+        },
+        "pageCount": 180,
+        "printType": "BOOK",
+        "categories": [
+          "Crafts & Hobbies"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.7.6.0.preview.1",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=vS7ElpLojTMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=vS7ElpLojTMC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=vS7ElpLojTMC&pg=PA7&dq=quilting&hl=&cd=9&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=vS7ElpLojTMC&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/The_Ultimate_Guide_to_Longarm_Machine_Qu.html?hl=&id=vS7ElpLojTMC"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.co.in/books/download/The_Ultimate_Guide_to_Longarm_Machine_Qu-sample-pdf.acsm?id=vS7ElpLojTMC&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=vS7ElpLojTMC&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "... \u003cb\u003eQuilter\u003c/b\u003e Linda V. Taylor. GLOSSARY OF LONGARM TERMS Back handles Basic Longarm \u003cb\u003eQuilting\u003c/b\u003e Machine. ACRYLIC GUIDE a straight piece of 1/4 &quot; thick acrylic used as a guide to help manipulate the \u003cb\u003equilting\u003c/b\u003e machine to stitch in the ditch , etc&nbsp;..."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "i-fjsgEACAAJ",
+      "etag": "qWb5qcgPasE",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/i-fjsgEACAAJ",
+      "volumeInfo": {
+        "title": "Quilting for the Absolute Beginner",
+        "authors": [
+          "C. Owen"
+        ],
+        "publisher": "Search Press",
+        "publishedDate": "2016-01-18",
+        "description": "Cheryl Owens guide is the ideal tool for the complete beginner to quilting. Step-by-step instructions and the spiral, hands free format enable you to practise and master each technique more easily. The book covers all the quilting equipment and tools, terminology and techniques, and includes a selection of attractive simple projects specially designed for the beginner.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "1782212639"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781782212638"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 0,
+        "printType": "BOOK",
+        "categories": [
+          "Quilting"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=i-fjsgEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=i-fjsgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.co.in/books?id=i-fjsgEACAAJ&dq=quilting&hl=&cd=10&source=gbs_api",
+        "infoLink": "http://books.google.co.in/books?id=i-fjsgEACAAJ&dq=quilting&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Quilting_for_the_Absolute_Beginner.html?hl=&id=i-fjsgEACAAJ"
+      },
+      "saleInfo": {
+        "country": "IN",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "IN",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=i-fjsgEACAAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "The book covers all the quilting equipment and tools, terminology and techniques, and includes a selection of attractive simple projects specially designed for the beginner."
+      }
+    }
+  ]
+}

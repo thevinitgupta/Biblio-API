@@ -123,7 +123,6 @@ public class JwtUtils {
     public boolean validateRefreshToken(String jwtToken, Environment environment){
         String validationMessage = "";
         try {
-            // TODO : Add Token Validation from Repository Logic
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -150,5 +149,15 @@ public class JwtUtils {
             }
         }
         return false;
+    }
+
+
+    public String getUsernameFromAccessToken(String jwtToken, String secret){
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        return String.valueOf(
+                Jwts.parser()
+                        .verifyWith(secretKey).build()
+                        .parseSignedClaims(jwtToken).getPayload()
+                        .get("username"));
     }
 }

@@ -126,9 +126,14 @@ public class SecurityConfig {
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 
+            requests.requestMatchers(HttpMethod.GET,"/posts/image/**").permitAll();
             requests.requestMatchers("/posts/**").authenticated();
+            requests.requestMatchers(HttpMethod.POST,"/posts/image").authenticated();
 
             requests.requestMatchers("/admin/**").authenticated();
+
+            // books api
+            requests.requestMatchers("/book/**").authenticated();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());

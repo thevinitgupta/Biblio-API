@@ -3,19 +3,23 @@
 #### User Authentication
 
   - [x] User registration with email.
-  - [ ] Email verification with OTP.
-  - [ ] User login/logout functionality.
+  - [x] Email verification with OTP.
+  - [x] User login/logout functionality.
 
 #### Book Posting:
-- [ ] Allow users to create posts about books they've read.
-- [ ] Basic form for entering book details: title, author, review text.
-- [ ] Rich text editor for composing reviews (optional for MVP 1).
+- [x] Allow users to create posts about books they've read.
+- [x] Basic form for entering book details: title, author, review text.
+- [x] Rich text editor for composing reviews (optional for MVP 1).
 
 ### MVP 2: Basic Search and Post Suggestion
 
 #### Search Functionality:
-- [ ] Implement basic search by book title.
-- [ ] Display search results with basic book information.
+- [x] Implement basic search by book title.
+- [x] Display search results with basic book information.
+
+#### Implement rate limited searches for books
+- [x] Search books from **Google Books API**
+- [x] Implement rate limiting for searching
 
 #### Post Suggestion:
 - [ ] When creating a new post, suggest existing posts about similar books.
