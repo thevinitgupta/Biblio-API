@@ -129,6 +129,9 @@ public class SecurityConfig {
 
             // books api
             requests.requestMatchers("/book/**").authenticated();
+
+            // reactions API
+            requests.requestMatchers("/reaction/**").authenticated();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());
