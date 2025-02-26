@@ -79,6 +79,9 @@ public class PostService {
         user.getPosts().add(saved);
         System.out.println(user.toString());
         userService.updateUser(user);
+
+        // TODO : Generate reaction document for post
+
         return saved;
     }
 

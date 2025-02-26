@@ -24,7 +24,6 @@ public class RedisUtil {
 
     private RedisClient redisClient;
     public RedisClient getClient() throws ResourceAccessException {
-//        System.out.println("Initializing Redis with: " + redisPath + ":" + redisPort+" -> "+redisAuthUsername+"/"+redisAuthKey);
 
         if(redisAuthKey.isEmpty() || redisPath.isEmpty() || redisPort.isEmpty()) {
             throw new ResourceAccessException("Error accessing redis config data");
