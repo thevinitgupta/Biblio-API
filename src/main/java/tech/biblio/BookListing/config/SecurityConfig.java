@@ -132,6 +132,10 @@ public class SecurityConfig {
 
             // reactions API
             requests.requestMatchers("/reaction/**").authenticated();
+
+            // comments API
+            requests.requestMatchers("/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.GET,"/comment/**").permitAll();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());

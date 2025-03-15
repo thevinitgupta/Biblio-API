@@ -1,25 +1,44 @@
 package tech.biblio.BookListing.entities;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@Document(collection = "comment")
+@NoArgsConstructor
 public class Comment {
     @MongoId
-    private ObjectId userId;
-    private String username;
-    private String content;
-    private Date createdAt;
-    private Date updatedAt;
+    private String id;
 
-    public Comment(ObjectId userId, String username, String content, Date createdAt) {
-        this.userId = userId;
-        this.username = username;
+    private String authorId;
+    private String authorName;
+
+    @Indexed
+    private String postId;
+    private String content;
+
+    @Indexed
+    private String parentId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @DBRef
+    private List<Reaction> reactions = new ArrayList<>();
+
+    public Comment(String authorId, String postId, String content, String parentId) {
+        this.authorId = authorId;
         this.content = content;
-        this.createdAt = createdAt;
-        this.updatedAt = createdAt;
+        this.postId = postId;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.parentId = parentId;
     }
 }
