@@ -4,10 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import tech.biblio.BookListing.dto.ErrorResponse;
-import tech.biblio.BookListing.exceptions.BookUploadException;
-import tech.biblio.BookListing.exceptions.FileUploadException;
-import tech.biblio.BookListing.exceptions.PostNotFoundException;
-import tech.biblio.BookListing.exceptions.UserNotFoundException;
+import tech.biblio.BookListing.exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +35,22 @@ public class ResourceExceptionHandler {
                     .error("FileNotFoundException")
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                     .errorDescription("The Post you are looking for does not exist")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+        else if(e instanceof CommentNotFoundException){
+            return ErrorResponse.builder()
+                    .error("CommentNotFoundException")
+                    .status(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .errorDescription("Comment with the specified ID does not exist.")
+                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        else if(e instanceof DbResourceModificationException){
+            return ErrorResponse.builder()
+                    .error("DbResourceModificationException")
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                    .errorDescription(e.getMessage())
                     .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                     .build();
         }
