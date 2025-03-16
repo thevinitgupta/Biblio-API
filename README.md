@@ -4,12 +4,12 @@
 
   - [x] User registration with email.
   - [ ] Email verification with OTP.
-  - [ ] User login/logout functionality.
+  - [x] User login/logout functionality.
 
 #### Book Posting:
-- [ ] Allow users to create posts about books they've read.
-- [ ] Basic form for entering book details: title, author, review text.
-- [ ] Rich text editor for composing reviews (optional for MVP 1).
+- [x] Allow users to create posts about books they've read.
+- [x] Basic form for entering book details: title, author, review text.
+- [x] Rich text editor for composing reviews (optional for MVP 1).
 
 ### MVP 2: Basic Search and Post Suggestion
 
@@ -25,7 +25,7 @@
 
 #### Enhanced Book Details:
 - [ ] Expand book details in posts: add genre, publication date, rating.
-- [ ] Allow users to add images, quotes, and headings to reviews.
+- [x] Allow users to add images, quotes, and headings to reviews.
 
 #### Book Lists:
 - [ ] Enable users to create "To Be Read" and "Already Read" lists.
