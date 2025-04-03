@@ -118,33 +118,37 @@ public class CommentService {
         List<CommentDTO> commentDTOList = new ArrayList<>();
         for(Comment baseComment : baseCommentsForPost){
             CommentDTO baseCommentDTO = new CommentDTO(baseComment);
-            ReactionsDTO baseCommentReactions = reactionService.getReactions(
-                    EntityType.COMMENT,
-                    baseCommentDTO.getId(),
-                    userId
-            );
-            baseCommentDTO.setCommentReactions(
-                    new CommentReactionDTO(
-                            // DONE : Flag is comment is liked current user
-                            !baseCommentReactions.userReactions().isEmpty(),
-                            baseCommentReactions.totalReactions()
-                    )
-            );
+            if(!userId.isEmpty()) {
+                ReactionsDTO baseCommentReactions = reactionService.getReactions(
+                        EntityType.COMMENT,
+                        baseCommentDTO.getId(),
+                        userId
+                );
+                baseCommentDTO.setCommentReactions(
+                        new CommentReactionDTO(
+                                // DONE : Flag is comment is liked current user
+                                !baseCommentReactions.userReactions().isEmpty(),
+                                baseCommentReactions.totalReactions()
+                        )
+                );
+            }
             List<CommentDTO> repliesCommentDTOList = new ArrayList<>();
             for(Comment reply : repliesMap.get(baseComment.getId())){
                 CommentDTO replyCommentDTO = new CommentDTO(reply);
-                ReactionsDTO replyCommentReactions = reactionService.getReactions(
-                        EntityType.COMMENT,
-                        replyCommentDTO.getId(),
-                        userId
-                );
-                replyCommentDTO.setCommentReactions(
-                        new CommentReactionDTO(
-                                // DONE : Flag is comment is liked current user
-                                !replyCommentReactions.userReactions().isEmpty(),
-                                replyCommentReactions.totalReactions()
-                        )
-                );
+                if(!userId.isEmpty()) {
+                    ReactionsDTO replyCommentReactions = reactionService.getReactions(
+                            EntityType.COMMENT,
+                            replyCommentDTO.getId(),
+                            userId
+                    );
+                    replyCommentDTO.setCommentReactions(
+                            new CommentReactionDTO(
+                                    // DONE : Flag is comment is liked current user
+                                    !replyCommentReactions.userReactions().isEmpty(),
+                                    replyCommentReactions.totalReactions()
+                            )
+                    );
+                }
                 repliesCommentDTOList.add(replyCommentDTO);
             }
             baseCommentDTO.setReplies(repliesCommentDTOList);

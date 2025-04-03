@@ -3,8 +3,8 @@
 #### User Authentication
 
   - [x] User registration with email.
-  - [x] Email verification with OTP.
-  - [x] User login/logout functionality.
+  - [ ] Email verification with OTP.
+  - [ ] User login/logout functionality.
 
 #### Book Posting:
 - [x] Allow users to create posts about books they've read.
@@ -29,7 +29,7 @@
 
 #### Enhanced Book Details:
 - [ ] Expand book details in posts: add genre, publication date, rating.
-- [ ] Allow users to add images, quotes, and headings to reviews.
+- [x] Allow users to add images, quotes, and headings to reviews.
 
 #### Book Lists:
 - [ ] Enable users to create "To Be Read" and "Already Read" lists.

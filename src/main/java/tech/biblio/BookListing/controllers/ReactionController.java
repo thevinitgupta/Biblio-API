@@ -33,6 +33,10 @@ public class ReactionController {
 
         String username = authentication.getName();
 
+        if(helper.isNullOrEmpty(username)){
+            username = "";
+        }
+
         if(helper.isNullOrEmpty(entityId)){
             throw new BadRequestException("Reactions can be fetched for specific post/comment only");
         }

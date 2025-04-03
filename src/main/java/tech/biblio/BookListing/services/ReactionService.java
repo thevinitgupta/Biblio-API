@@ -25,7 +25,7 @@ public class ReactionService {
         String userId = reactionUtil.encodeKey(userEmail);
         // TODO : Filter based on entityType and EntityId
         // TODO : Only fetch current UserID data from DB
-        Reaction userReaction = reactionRepository.findByEntityIdAndEntityTypeAggregated(entityId,entityType,userId)
+        Reaction userReaction = reactionRepository.findByEntityIdAndEntityTypeAggregated(entityId,entityType,reactionUtil.encodeKey(userId))
                 .orElse(Reaction.builder()
                         .reactions(new HashMap<>())
                         .entityType(entityType)
@@ -96,5 +96,24 @@ public class ReactionService {
         // COMPLETED : save to DB
         reactionRepository.save(reaction);
         return true;
+    }
+
+    public long countTotalReactions(EntityType entityType, String entityId){
+        Reaction reactions = reactionRepository
+                .findReactionsByEntityIdAndEntityType(entityId, entityType)
+                .orElse(Reaction.builder()
+                        .reactionCount(reactionUtil.initReactionsCount())
+                        .entityId(entityId)
+                        .entityType(entityType)
+                        .reactions(new HashMap<>())
+                        .lastModifiedOn(new Date())
+                        .build());
+
+        long totalReactionsCount = 0;
+        for(Map.Entry<ReactionType, Integer> reactionEntry : reactions.getReactionCount().entrySet()){
+            totalReactionsCount += reactionEntry.getValue();
+        }
+
+        return totalReactionsCount;
     }
 }

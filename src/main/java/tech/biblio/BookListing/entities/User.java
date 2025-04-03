@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private List<Post> posts = new ArrayList<>();
 
     private boolean profileImageAdded;
-    @NonNull
+
     private String profileImageId;
 
     @DBRef

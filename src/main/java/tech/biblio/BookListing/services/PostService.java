@@ -1,26 +1,35 @@
 package tech.biblio.BookListing.services;
 
 import io.appwrite.exceptions.AppwriteException;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import tech.biblio.BookListing.dto.CreatePostDTO;
-import tech.biblio.BookListing.dto.UserDTO;
+import tech.biblio.BookListing.dto.*;
 import tech.biblio.BookListing.entities.Book;
+import tech.biblio.BookListing.entities.EntityType;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.BookUploadException;
 import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
+import tech.biblio.BookListing.mappers.PostMapper;
 import tech.biblio.BookListing.repositories.PostRepository;
+import tech.biblio.BookListing.utils.Helper;
 import tech.biblio.BookListing.utils.ImageUtil;
 import tech.biblio.BookListing.utils.UniqueID;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -35,6 +44,15 @@ public class PostService {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ReactionService reactionService;
+
+    @Autowired
+    private Helper helper;
 
     @Autowired
     private ImageUtil imageUtil;
@@ -67,6 +85,9 @@ public class PostService {
                 .comments(new String[]{})
                 .book(savedBook)
                 .coverImage(createPostDTO.coverImage())
+                .slug(helper.slugify(createPostDTO.title()))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
         UserDTO user = userService.getUserByEmail(email, true);
@@ -80,21 +101,57 @@ public class PostService {
         System.out.println(user.toString());
         userService.updateUser(user);
 
-        // TODO : Generate reaction document for post
-
         return saved;
     }
 
     public Post save(Post post) {
         return postRepository.save(post);
     }
-    public  List<Post> getAll(){
-        return postRepository.findAll();
+
+    // DONE : Add Count of total posts and hasMore logic
+    // DONE : Add Pagination
+    // DONE : Add Offset and Page
+    // DONE : Move Post DTO Mapping from Controller to Here
+    // DONE : Create fetchPostsDTO and Add hasMore variable, total and current Page
+    // TODO : Sorting not working
+    public  FetchPostsDTO getAll(int page, int offset){
+
+        int adjustedPage = page > 0 ? page - 1 : 0;
+        Pageable paginateAndSortByUpdatedDesc = PageRequest.of(adjustedPage,offset, Sort.by("updatedAt").descending());
+
+        Page<Post> posts = postRepository.findAll(paginateAndSortByUpdatedDesc);
+
+        long totalCount = mongoTemplate.count(
+                new Query(), Post.class
+        );
+
+        long currCount = ((long) page*offset) + posts.getSize();
+
+        List<PostDTO> userPostsDTO = posts.stream()
+            .map(post -> {
+           post.setLikes((int)reactionService.countTotalReactions(EntityType.POST, post.getId().toString()));
+           return post;
+        }).map((PostMapper::postDTO))
+                .toList();
+
+
+        return new FetchPostsDTO(userPostsDTO,
+                new PaginationDTO(
+                        adjustedPage,
+                        totalCount,
+                        (int) Math.ceil((double) totalCount / offset),
+                        currCount<totalCount ));
     }
 
     public Post getById(String id) {
-        ObjectId postId = new ObjectId(id);
-        return postRepository.findById(postId).orElse(null);
+        Query query = new Query(
+                new Criteria().orOperator(
+                        Criteria.where("_id").is(id),
+                        Criteria.where("slug").is(id)
+                )
+        );
+        return mongoTemplate.findOne(query, Post.class);
+//        return postRepository.findById(postId).orElse(null);
     }
 
 
