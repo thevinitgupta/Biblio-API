@@ -141,7 +141,7 @@ public class ImageUtil {
         Storage storage = new Storage(client);
         CompletableFuture<byte[]> future = new CompletableFuture<>();
 
-        storage.getFilePreview(
+        storage.getFileView(
                 bucketId, // bucketId
                 fileId, // fileId (you can make it dynamic if required)
                 new CoroutineCallback<>((result, error) -> {

@@ -41,4 +41,13 @@ public interface ReactionRepository extends MongoRepository<Reaction, ObjectId> 
     Optional<Reaction> findByEntityIdAndEntityTypeAggregated(String entityId,
                                                                        EntityType entityType,
                                                                        String userId);
+
+    @Query(value = "{ 'entityId': ?0, 'entityType': ?1 }",
+            fields = "{ " +
+                    "'id': 1, " +
+                    "'entityId': 1, " +
+                    "'entityType': 1, " +
+                    "'reactionCount': 1 }")
+    Optional<Reaction> findReactionsByEntityIdAndEntityType(String entityId,
+                                                             EntityType entityType);
 }

@@ -121,9 +121,11 @@ public class SecurityConfig {
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 
+            requests.requestMatchers(HttpMethod.GET,"/posts/**").permitAll();
             requests.requestMatchers(HttpMethod.GET,"/posts/image/**").permitAll();
-            requests.requestMatchers("/posts/**").authenticated();
             requests.requestMatchers(HttpMethod.POST,"/posts/image").authenticated();
+            requests.requestMatchers(HttpMethod.PUT,"/posts/**").authenticated();
+            requests.requestMatchers(HttpMethod.POST,"/posts/**").authenticated();
 
             requests.requestMatchers("/admin/**").authenticated();
 
@@ -131,11 +133,14 @@ public class SecurityConfig {
             requests.requestMatchers("/book/**").authenticated();
 
             // reactions API
-            requests.requestMatchers("/reaction/**").authenticated();
+            requests.requestMatchers(HttpMethod.GET,"/reaction/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST,"/reaction/**").authenticated();
 
             // comments API
-            requests.requestMatchers("/comment/**").authenticated();
             requests.requestMatchers(HttpMethod.GET,"/comment/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST,"/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.DELETE,"/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.PUT,"/comment/**").authenticated();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());

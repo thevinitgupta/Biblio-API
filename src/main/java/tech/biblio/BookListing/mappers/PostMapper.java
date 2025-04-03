@@ -13,6 +13,9 @@ public class PostMapper {
                 .comments(post.getComments())
                 .likes(post.getLikes())
                 .coverImage(post.getCoverImage())
+                .slug(post.getSlug())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
     public static PostDTO postDTOWithBook(Post post){
@@ -24,6 +27,9 @@ public class PostMapper {
                 .likes(post.getLikes())
                 .book(post.getBook())
                 .coverImage(post.getCoverImage())
+                .slug(post.getSlug())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
 }

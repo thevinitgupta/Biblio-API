@@ -111,6 +111,15 @@
 			<version>6.3.1.RELEASE</version>
 		</dependency>
 
+
+<!--		Nano ID for Slugs -->
+		<!-- https://mvnrepository.com/artifact/com.soundicly/jnanoid-enhanced -->
+		<dependency>
+			<groupId>io.viascom.nanoid</groupId>
+			<artifactId>nanoid</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

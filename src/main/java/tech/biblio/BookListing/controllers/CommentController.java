@@ -49,6 +49,9 @@ public class CommentController {
                                                                                   @RequestParam(required = false, defaultValue = "10") int results) throws BadRequestException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        if(helper.isNullOrEmpty(username)){
+            username = "";
+        }
 
         System.out.println(postId+", "+page+", "+results);
         if(helper.isNullOrEmpty(postId)){

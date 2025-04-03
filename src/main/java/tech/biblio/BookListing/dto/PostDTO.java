@@ -2,7 +2,9 @@ package tech.biblio.BookListing.dto;
 
 import tech.biblio.BookListing.entities.Book;
 
-public record PostDTO(String id, String title, String content, int likes, String[] comments, Book book, String coverImage) {
+import java.time.LocalDateTime;
+
+public record PostDTO(String id, String title, String content, int likes, String[] comments, Book book, String coverImage, String slug, LocalDateTime createdAt, LocalDateTime updatedAt) {
     public static PostDTOBuilder builder() {
         return new PostDTOBuilder();
     }
@@ -16,6 +18,10 @@ public record PostDTO(String id, String title, String content, int likes, String
         private Book book;
 
         private String coverImage;
+
+        private String slug;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
 
         public PostDTOBuilder id(String id) {
             this.id = id;
@@ -52,8 +58,23 @@ public record PostDTO(String id, String title, String content, int likes, String
             return this;
         }
 
+        public PostDTOBuilder slug(String slug){
+            this.slug = slug;
+            return this;
+        }
+
+        public PostDTOBuilder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public PostDTOBuilder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
         public PostDTO build() {
-            return new PostDTO(id, title, content, likes, comments, book, coverImage);
+            return new PostDTO(id, title, content, likes, comments, book, coverImage, slug, createdAt, updatedAt);
         }
     }
 }

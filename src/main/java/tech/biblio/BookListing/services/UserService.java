@@ -16,9 +16,7 @@ import tech.biblio.BookListing.repositories.UserRepository;
 import tech.biblio.BookListing.utils.ImageUtil;
 import tech.biblio.BookListing.utils.UniqueID;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -152,5 +150,15 @@ public class UserService {
             initials = imageUtil.getUserInitials(projectId, apiKey, username);
         }
         return initials;
+    }
+
+    private byte[] toByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, bytesRead);
+        }
+        return buffer.toByteArray();
     }
 }
