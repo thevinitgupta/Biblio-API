@@ -14,18 +14,18 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public Optional<Book> getBookById(ObjectId id){
+    public Optional<Book> getBookById(ObjectId id) {
         return bookRepository.findById(id);
     }
 
-    public Book getBookByBookId(String bookId){
+    public Book getBookByBookId(String bookId) {
         return bookRepository.findByBookId(bookId);
     }
 
-    public Book saveBook(Book book){
+    public Book saveBook(Book book) {
         Book dbBook = this.getBookByBookId(book.getBookId());
-        if(dbBook!=null) {
-           return dbBook;
+        if (dbBook != null) {
+            return dbBook;
         }
         return bookRepository.save(book);
     }

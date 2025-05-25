@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AuthorizationEvents {
     @EventListener
-    public void onFailure(AuthorizationDeniedEvent authorizationDeniedEvent){
+    public void onFailure(AuthorizationDeniedEvent authorizationDeniedEvent) {
         log.error("User Authorization failed for user : {} due to : {}",
                 authorizationDeniedEvent.getAuthentication().get().getName(),
                 authorizationDeniedEvent.getAuthorizationDecision().toString());

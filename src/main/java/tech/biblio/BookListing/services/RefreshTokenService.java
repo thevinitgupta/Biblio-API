@@ -18,12 +18,14 @@ public class RefreshTokenService {
     public RefreshTokenStore saveToken(RefreshTokenStore refreshTokenStore) {
         return refreshTokenRepository.save(refreshTokenStore);
     }
-    public RefreshTokenStore getTokenByTokenId(String tokenId){
+
+    public RefreshTokenStore getTokenByTokenId(String tokenId) {
         return refreshTokenRepository.findFirstByTokenId(tokenId);
     }
-    public boolean checkValidity(String tokenId) throws IllegalArgumentException{
+
+    public boolean checkValidity(String tokenId) throws IllegalArgumentException {
         RefreshTokenStore dbToken = refreshTokenRepository.findFirstByTokenId(tokenId);
-        if(dbToken==null) {
+        if (dbToken == null) {
             throw new RefreshTokenValidationException("Token with ID not found");
         }
         Date now = new Date();
@@ -37,9 +39,9 @@ public class RefreshTokenService {
         return dbToken.getIsValid() && diff <= 15;
     }
 
-    public boolean invalidateToken(String tokenId) throws IllegalArgumentException{
+    public boolean invalidateToken(String tokenId) throws IllegalArgumentException {
         RefreshTokenStore dbToken = refreshTokenRepository.findFirstByTokenId(tokenId);
-        if(dbToken==null) {
+        if (dbToken == null) {
             throw new RefreshTokenValidationException("Token with ID not found");
         }
         dbToken.setIsValid(false);

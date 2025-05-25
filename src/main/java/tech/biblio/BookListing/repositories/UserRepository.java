@@ -11,7 +11,9 @@ import java.util.List;
 public interface UserRepository
         extends MongoRepository<User, ObjectId> {
     List<User> findByFirstName(String firstName);
+
     List<User> findAllByFirstName(String firstName);
+
     User findFirstByEmail(String email);
 
 }

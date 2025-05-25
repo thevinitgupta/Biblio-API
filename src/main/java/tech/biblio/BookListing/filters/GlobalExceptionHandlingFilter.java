@@ -42,18 +42,18 @@ public class GlobalExceptionHandlingFilter extends OncePerRequestFilter {
     private void handleException(HttpServletResponse response, Exception ex) throws IOException {
         JsonConverter jsonConverter = new JsonConverter();
         ErrorResponse errorResponse = null;
-        System.out.println("Global Exception Handler : "+ex.getMessage());
+        System.out.println("Global Exception Handler : " + ex.getMessage());
         errorResponse = authenticationExceptionHandler.handler(ex);
-        if(errorResponse==null) {
+        if (errorResponse == null) {
             errorResponse = resourceExceptionHandler.handler(ex);
         }
-        if(errorResponse==null){
+        if (errorResponse == null) {
             errorResponse = invalidValueExceptionHandler.handler(ex);
         }
-        if(response==null){
+        if (response == null) {
             errorResponse = servicesExceptionalHandler.handler(ex);
         }
-        if(errorResponse==null){
+        if (errorResponse == null) {
             log.error("Unknown Exception in filter : {}, {}", ex.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
             errorResponse = ErrorResponse.builder()
                     .error("Unknown Error")

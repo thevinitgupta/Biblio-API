@@ -29,17 +29,15 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        if(null == user){
+        if (null == user) {
             throw new UserNotFoundException("No User found with Username", username);
-        }
-        else {
+        } else {
 //            AuthenticationUser dbUser = user.;
-            if(passwordEncoder.matches(password, user.getPassword())){
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 List<GrantedAuthority> authorities = new ArrayList<>(
                         user.getAuthorities());
-                return new UsernamePasswordAuthenticationToken(username,password,authorities);
-            }
-            else {
+                return new UsernamePasswordAuthenticationToken(username, password, authorities);
+            } else {
                 System.out.println("Invalid Password Found");
                 throw new InvalidUserDetailsException("Wrong Password");
             }
@@ -48,8 +46,9 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 
     /**
      * Checks if the Authentication Type is Supported in the Provider
-    * @param authentication object
-    */
+     *
+     * @param authentication object
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));

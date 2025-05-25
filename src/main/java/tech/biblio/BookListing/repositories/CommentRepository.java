@@ -11,7 +11,7 @@ import java.util.List;
 
 @Document("comment")
 @Repository
-public interface CommentRepository extends MongoRepository<Comment,ObjectId> {
+public interface CommentRepository extends MongoRepository<Comment, ObjectId> {
 
     // fetch all base comments paginated
     List<Comment> findAllByPostId(String postId, Pageable pageable);

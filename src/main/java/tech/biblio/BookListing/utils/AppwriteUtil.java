@@ -9,8 +9,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class AppwriteUtil {
     private Client appwriteClient = null;
-    public Client getClient(String appId, String apiKey){
-        if(appwriteClient==null){
+
+    public Client getClient(String appId, String apiKey) {
+        if (appwriteClient == null) {
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .connectTimeout(60, TimeUnit.SECONDS)  // Increase connection timeout
                     .readTimeout(60, TimeUnit.SECONDS)    // Increase read timeout

@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Autowired
     private GlobalExceptionHandlingFilter globalExceptionHandlingFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService){
+    public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -85,7 +85,7 @@ public class SecurityConfig {
 
 
         // CSRF disabled as we use stateless JWT authentication
-          http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
 
 //        http.csrf(httpSecurityCsrfConfigurer ->
 //                httpSecurityCsrfConfigurer.csrfTokenRequestHandler(csrfTokenRequestHandler)
@@ -108,24 +108,23 @@ public class SecurityConfig {
         http.addFilterAfter(new RefreshTokenValidationFilter(), JWTGenerationFilter.class); // Ensure it runs after JWT Generation
 
 
-
         http.authorizeHttpRequests((requests) -> {
 //            requests.anyRequest().permitAll();
             requests.requestMatchers("/health").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/auth/access-token").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/auth/register").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/auth/access-token").permitAll();
 
             // Authenticated Endpoints
-            requests.requestMatchers(HttpMethod.POST,"/auth/logout").authenticated();
+            requests.requestMatchers(HttpMethod.POST, "/auth/logout").authenticated();
             requests.requestMatchers("/user/**").authenticated();
 //            requests.requestMatchers("/user/**").hasAnyAuthority(Privilege.CREATE_USER.getPrivilege());
 
-            requests.requestMatchers(HttpMethod.GET,"/posts/**").permitAll();
-            requests.requestMatchers(HttpMethod.GET,"/posts/image/**").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/posts/image").authenticated();
-            requests.requestMatchers(HttpMethod.PUT,"/posts/**").authenticated();
-            requests.requestMatchers(HttpMethod.POST,"/posts/**").authenticated();
+            requests.requestMatchers(HttpMethod.GET, "/posts/**").permitAll();
+            requests.requestMatchers(HttpMethod.GET, "/posts/image/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/posts/image").authenticated();
+            requests.requestMatchers(HttpMethod.PUT, "/posts/**").authenticated();
+            requests.requestMatchers(HttpMethod.POST, "/posts/**").authenticated();
 
             requests.requestMatchers("/admin/**").authenticated();
 
@@ -133,14 +132,17 @@ public class SecurityConfig {
             requests.requestMatchers("/book/**").authenticated();
 
             // reactions API
-            requests.requestMatchers(HttpMethod.GET,"/reaction/**").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/reaction/**").authenticated();
+            requests.requestMatchers(HttpMethod.GET, "/reaction/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/reaction/**").authenticated();
 
             // comments API
-            requests.requestMatchers(HttpMethod.GET,"/comment/**").permitAll();
-            requests.requestMatchers(HttpMethod.POST,"/comment/**").authenticated();
-            requests.requestMatchers(HttpMethod.DELETE,"/comment/**").authenticated();
-            requests.requestMatchers(HttpMethod.PUT,"/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.GET, "/comment/**").permitAll();
+            requests.requestMatchers(HttpMethod.POST, "/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.DELETE, "/comment/**").authenticated();
+            requests.requestMatchers(HttpMethod.PUT, "/comment/**").authenticated();
+
+            // key API
+            requests.requestMatchers(HttpMethod.GET, "/key/**").permitAll();
         });
 //        http.formLogin(withDefaults());
 //        http.httpBasic(withDefaults());
@@ -149,9 +151,9 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-                                                PasswordEncoder passwordEncoder){
+                                                PasswordEncoder passwordEncoder) {
         UsernamePasswordAuthenticationProvider authenticationProvider = new
-                UsernamePasswordAuthenticationProvider(userDetailsService,passwordEncoder);
+                UsernamePasswordAuthenticationProvider(userDetailsService, passwordEncoder);
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(true);
         return providerManager;

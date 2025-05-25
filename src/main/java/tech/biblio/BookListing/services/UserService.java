@@ -31,7 +31,6 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-
     @Autowired
     private ImageUtil imageUtil;
 
@@ -44,11 +43,12 @@ public class UserService {
     @Value("${APPWRITE_PROFILE_IMAGE_BUCKET}")
     private String profileImageBucket;
 
-    public User addUser(User user){
+    public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-    public User updateUser(UserDTO user){
+
+    public User updateUser(UserDTO user) {
         User dbUser = userRepository.findFirstByEmail(user.getEmail());
         dbUser.setPosts(user.getPosts());
         dbUser.setProfileImageId(user.getProfileImageId());
@@ -56,97 +56,97 @@ public class UserService {
         return userRepository.save(dbUser);
     }
 
-    public boolean checkUserExists(String email){
+    public boolean checkUserExists(String email) {
         User dbUser = userRepository.findFirstByEmail(email);
         return dbUser != null;
     }
 
-    public  List<UserDTO> getAll(){
-        return userRepository.findAll().stream().map(user -> UserMapper.userDTO(user,false)).toList();
+    public List<UserDTO> getAll() {
+        return userRepository.findAll().stream().map(user -> UserMapper.userDTO(user, false)).toList();
     }
 
-    public List<UserDTO> getAllByFirstName(String firstName){
-        return userRepository.findByFirstName(firstName).stream().map(user -> UserMapper.userDTO(user,false)).toList();
+    public List<UserDTO> getAllByFirstName(String firstName) {
+        return userRepository.findByFirstName(firstName).stream().map(user -> UserMapper.userDTO(user, false)).toList();
     }
 
     public UserDTO getUserByEmail(String email, boolean allowPosts) {
         User dbUser = userRepository.findFirstByEmail(email);
-        if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!", email);
-        return  UserMapper.userDTO(dbUser, allowPosts);
+        if (dbUser == null) throw new UserNotFoundException("No User with email: " + email + " found!", email);
+        return UserMapper.userDTO(dbUser, allowPosts);
     }
 
-    public Collection<GrantedAuthority> getUserAuthorities(String email){
+    public Collection<GrantedAuthority> getUserAuthorities(String email) {
         User dbUser = userRepository.findFirstByEmail(email);
-        if(dbUser==null) throw new UserNotFoundException("No User with email: "+email+" found!", email);
+        if (dbUser == null) throw new UserNotFoundException("No User with email: " + email + " found!", email);
         return new ArrayList<>(dbUser.getAuthorities());
     }
 
-    public void deleteUser(User user){
+    public void deleteUser(User user) {
         userRepository.deleteById(user.getId());
     }
 
     public boolean uploadProfileImage(MultipartFile multipartFile, String email) throws
             FileNotFoundException, FileTypeNotAllowedException, AppwriteException, IOException, ExecutionException, InterruptedException {
-            File file = null;
-            file = imageUtil.convertToFile(multipartFile);
-            if(file.length() > 2*1024*1024) {
-                throw new FileTypeNotAllowedException("Max file size 2MB allowed", file.length() / 1024 + "mb", "2MB");
-            }
-            System.out.println("Project ID : " + projectId);
-            System.out.println("profileImageBucket : " + profileImageBucket);
-            System.out.println("apiKey : " + apiKey);
-            System.out.println("File before compression : " + file);
-            String extension = imageUtil.getExtension(file.getName());
-            if (!List.of(".png", ".jpg", ".jpeg").contains(extension)) {
-                throw new FileTypeNotAllowedException("Only images of max size 5mb allowed in Profile Image",
-                        extension,
-                        "jpg/png/jpeg");
-            }
+        File file = null;
+        file = imageUtil.convertToFile(multipartFile);
+        if (file.length() > 2 * 1024 * 1024) {
+            throw new FileTypeNotAllowedException("Max file size 2MB allowed", file.length() / 1024 + "mb", "2MB");
+        }
+        System.out.println("Project ID : " + projectId);
+        System.out.println("profileImageBucket : " + profileImageBucket);
+        System.out.println("apiKey : " + apiKey);
+        System.out.println("File before compression : " + file);
+        String extension = imageUtil.getExtension(file.getName());
+        if (!List.of(".png", ".jpg", ".jpeg").contains(extension)) {
+            throw new FileTypeNotAllowedException("Only images of max size 5mb allowed in Profile Image",
+                    extension,
+                    "jpg/png/jpeg");
+        }
 
-            file = imageUtil.compressProfileImage(file, email + "_prof_img" + extension);
-            // check if file exists
-            UserDTO user = this.getUserByEmail(email, false);
-            boolean existingFileDeleted = true;
-            io.appwrite.models.File uploadedFile = null;
+        file = imageUtil.compressProfileImage(file, email + "_prof_img" + extension);
+        // check if file exists
+        UserDTO user = this.getUserByEmail(email, false);
+        boolean existingFileDeleted = true;
+        io.appwrite.models.File uploadedFile = null;
 
-            // delete previous file with email id
-            if (user.isProfileImageAdded()) {
-                existingFileDeleted = this.deleteProfileImage(user);
-            } else {
-                user.setProfileImageId(UniqueID.generateLongId());
-            }
-            // create new file
-            if (existingFileDeleted) {
-                uploadedFile = imageUtil.uploadImage(projectId, profileImageBucket, apiKey, file, user);
-            }
-            // if uploaded, update user object to add profImage = true flag
-            if (uploadedFile != null) {
-                user.setProfileImageAdded(true);
-                this.updateUser(user);
-            }
+        // delete previous file with email id
+        if (user.isProfileImageAdded()) {
+            existingFileDeleted = this.deleteProfileImage(user);
+        } else {
+            user.setProfileImageId(UniqueID.generateLongId());
+        }
+        // create new file
+        if (existingFileDeleted) {
+            uploadedFile = imageUtil.uploadImage(projectId, profileImageBucket, apiKey, file, user);
+        }
+        // if uploaded, update user object to add profImage = true flag
+        if (uploadedFile != null) {
+            user.setProfileImageAdded(true);
+            this.updateUser(user);
+        }
 
 
         return true;
     }
 
-    public byte [] getUserProfileImage(UserDTO user) throws AppwriteException, ExecutionException, InterruptedException {
-            if(!user.isProfileImageAdded()){
-                return this.getUserAvatar(user.getFirstName()+" "+user.getLastName());
-            }
-            return imageUtil.getImagePreview(projectId, profileImageBucket, apiKey, user.getProfileImageId());
+    public byte[] getUserProfileImage(UserDTO user) throws AppwriteException, ExecutionException, InterruptedException {
+        if (!user.isProfileImageAdded()) {
+            return this.getUserAvatar(user.getFirstName() + " " + user.getLastName());
+        }
+        return imageUtil.getImagePreview(projectId, profileImageBucket, apiKey, user.getProfileImageId());
 
     }
 
     public boolean deleteProfileImage(UserDTO user) throws AppwriteException {
-        imageUtil.deleteImage(projectId,profileImageBucket,apiKey,user.getProfileImageId());
+        imageUtil.deleteImage(projectId, profileImageBucket, apiKey, user.getProfileImageId());
         user.setProfileImageAdded(false);
         this.updateUser(user);
         return true;
     }
 
-    public byte [] getUserAvatar(String username) throws AppwriteException, ExecutionException, InterruptedException {
-        byte [] initials = null;
-        if(username!=null){
+    public byte[] getUserAvatar(String username) throws AppwriteException, ExecutionException, InterruptedException {
+        byte[] initials = null;
+        if (username != null) {
             initials = imageUtil.getUserInitials(projectId, apiKey, username);
         }
         return initials;

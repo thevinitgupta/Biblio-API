@@ -21,11 +21,11 @@ public class ReactionService {
     @Autowired
     private ReactionUtil reactionUtil;
 
-    public ReactionsDTO getReactions(EntityType entityType, String entityId, String userEmail){
+    public ReactionsDTO getReactions(EntityType entityType, String entityId, String userEmail) {
         String userId = reactionUtil.encodeKey(userEmail);
         // TODO : Filter based on entityType and EntityId
         // TODO : Only fetch current UserID data from DB
-        Reaction userReaction = reactionRepository.findByEntityIdAndEntityTypeAggregated(entityId,entityType,reactionUtil.encodeKey(userId))
+        Reaction userReaction = reactionRepository.findByEntityIdAndEntityTypeAggregated(entityId, entityType, reactionUtil.encodeKey(userId))
                 .orElse(Reaction.builder()
                         .reactions(new HashMap<>())
                         .entityType(entityType)
@@ -36,7 +36,7 @@ public class ReactionService {
 
         // TODO : Calculate total reactions count
         long totalReactionsCount = 0;
-        for(Map.Entry<ReactionType, Integer> reactionEntry : userReaction.getReactionCount().entrySet()){
+        for (Map.Entry<ReactionType, Integer> reactionEntry : userReaction.getReactionCount().entrySet()) {
             totalReactionsCount += reactionEntry.getValue();
         }
 
@@ -46,7 +46,7 @@ public class ReactionService {
                 userReaction.getReactionCount());
     }
 
-    public boolean toggleReaction(ReactionRequestDTO reactionRequestDTO, String userId){
+    public boolean toggleReaction(ReactionRequestDTO reactionRequestDTO, String userId) {
         Optional<Reaction> optionalReaction = reactionRepository
                 .findByEntityIdAndEntityType(reactionRequestDTO.entityId(),
                         reactionRequestDTO.entityType());
@@ -66,11 +66,10 @@ public class ReactionService {
 
         Set<ReactionType> reactionsSet = reaction.getReactions().getOrDefault(reactionUtil.encodeKey(userId), new HashSet<>());
 
-        if(reactionsSet.contains(reactionRequestDTO.reactionType())){
+        if (reactionsSet.contains(reactionRequestDTO.reactionType())) {
             toggle = -1; // remove
             reactionsSet.remove(reactionRequestDTO.reactionType());
-        }
-        else {
+        } else {
             toggle = 1; // add
             reactionsSet.add(reactionRequestDTO.reactionType());
         }
@@ -98,7 +97,7 @@ public class ReactionService {
         return true;
     }
 
-    public long countTotalReactions(EntityType entityType, String entityId){
+    public long countTotalReactions(EntityType entityType, String entityId) {
         Reaction reactions = reactionRepository
                 .findReactionsByEntityIdAndEntityType(entityId, entityType)
                 .orElse(Reaction.builder()
@@ -110,7 +109,7 @@ public class ReactionService {
                         .build());
 
         long totalReactionsCount = 0;
-        for(Map.Entry<ReactionType, Integer> reactionEntry : reactions.getReactionCount().entrySet()){
+        for (Map.Entry<ReactionType, Integer> reactionEntry : reactions.getReactionCount().entrySet()) {
             totalReactionsCount += reactionEntry.getValue();
         }
 

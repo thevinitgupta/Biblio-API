@@ -22,9 +22,9 @@ public class JWTGenerationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(authentication!=null && (authHeader==null || authHeader.substring(6).isEmpty())){
+        if (authentication != null && (authHeader == null || authHeader.substring(6).isEmpty())) {
             Environment env = getEnvironment();
-            if(env!=null){
+            if (env != null) {
                 HashMap<String, Object> accessTokenClaims = new HashMap<>();
                 accessTokenClaims.put("username", authentication.getName());
                 accessTokenClaims.put("authorities", authentication.getAuthorities()
@@ -32,11 +32,11 @@ public class JWTGenerationFilter extends OncePerRequestFilter {
                         .collect(Collectors.joining(",")));
                 JwtUtils jwtUtils = new JwtUtils();
                 String jwtToken = jwtUtils.generateAccessToken(accessTokenClaims, env);
-                System.out.println("New JWT Token: "+jwtToken);
-                response.setHeader(ApplicationConstants.JWT_HEADER,jwtToken);
+                System.out.println("New JWT Token: " + jwtToken);
+                response.setHeader(ApplicationConstants.JWT_HEADER, jwtToken);
             }
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
     @Override

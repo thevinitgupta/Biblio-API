@@ -22,12 +22,12 @@ public class RateLimiterConfig {
 
     private final RedisUtil redisUtil;
 
-    public RateLimiterConfig(@Lazy RedisUtil redisUtil){
+    public RateLimiterConfig(@Lazy RedisUtil redisUtil) {
         this.redisUtil = redisUtil;
     }
 
     @Bean
-    public ProxyManager<String> lettuceBasedProxyManager(){
+    public ProxyManager<String> lettuceBasedProxyManager() {
         RedisClient redisClient = this.redisUtil.getClient();
 
         StatefulRedisConnection<String, byte[]> redisConnection =
@@ -37,7 +37,7 @@ public class RateLimiterConfig {
     }
 
     @Bean
-    public Supplier<BucketConfiguration> bucketConfigurationSupplier(){
+    public Supplier<BucketConfiguration> bucketConfigurationSupplier() {
         return () -> BucketConfiguration
                 .builder()
                 .addLimit(

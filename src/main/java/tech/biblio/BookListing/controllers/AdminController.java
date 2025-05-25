@@ -9,9 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import tech.biblio.BookListing.dto.UserDTO;
-import tech.biblio.BookListing.entities.User;
-import tech.biblio.BookListing.mappers.UserMapper;
 import tech.biblio.BookListing.services.UserService;
 
 @Controller
@@ -20,14 +17,15 @@ import tech.biblio.BookListing.services.UserService;
 public class AdminController {
     @Autowired
     private UserService userService;
+
     @GetMapping
-    public ResponseEntity<?> getAdminData(){
+    public ResponseEntity<?> getAdminData() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 //            User user = UserMapper.userEntity(userService.getUserByEmail(username));
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         return new ResponseEntity<>("", HttpStatus.OK);

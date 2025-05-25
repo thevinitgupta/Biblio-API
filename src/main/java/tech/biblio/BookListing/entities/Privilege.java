@@ -20,8 +20,7 @@ public enum Privilege {
 
     UPDATE_POST("update:post"),
     UPDATE_COMMENT("update:comment"),
-    UPDATE_USER("update:user")
-    ;
+    UPDATE_USER("update:user");
 
     @Getter
     private final String privilege;

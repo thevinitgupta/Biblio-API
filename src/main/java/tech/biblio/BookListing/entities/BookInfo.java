@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class BookInfo {
     private String title;
-//    private String subtitle;
+    //    private String subtitle;
     private List<String> authors;
 
     @JsonProperty("publishedDate")

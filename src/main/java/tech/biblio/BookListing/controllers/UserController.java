@@ -30,21 +30,20 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getUsers(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken){
+    public ResponseEntity<?> getUsers(@CookieValue(name = "refreshToken", defaultValue = "") String refreshToken) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        System.out.println(authentication.getName());
-        log.info("User Logged In with Email {}",authentication.getName());
+        log.info("User Logged In with Email {}", authentication.getName());
         try {
             String email = authentication.getName();
 //            Cookie[] cookies =
-            System.out.println("Cookies in user contrl : \n"+ refreshToken);
+            System.out.println("Cookies in user contrl : \n" + refreshToken);
             UserDTO user = userService.getUserByEmail(email, false);
-            if(user==null) {
+            if (user == null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-        catch (MongoException e){
+        } catch (MongoException e) {
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,17 +51,16 @@ public class UserController {
     }
 
 
-
     @GetMapping("/{email}")
-    public ResponseEntity<?> getUsersByEmail(@PathVariable String email){
+    public ResponseEntity<?> getUsersByEmail(@PathVariable String email) {
         try {
             UserDTO user = userService.getUserByEmail(email, false);
 
-            if(user==null) {
+            if (user == null) {
                 return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
             }
             return new ResponseEntity<>(user, HttpStatus.FOUND);
-        }catch (Exception e){
+        } catch (Exception e) {
             String message = e instanceof MongoException ? "Error in MongoDB" : "Server Error";
             System.out.println(e.getLocalizedMessage());
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -71,19 +69,19 @@ public class UserController {
 
     @GetMapping("/profileImage")
     public ResponseEntity<?> getProfileImage() throws AppwriteException, ExecutionException, InterruptedException {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            String email = authentication.getName();
-            UserDTO user = userService.getUserByEmail(email, false);
+        String email = authentication.getName();
+        UserDTO user = userService.getUserByEmail(email, false);
 
-            if(user==null) {
-                return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
-            }
-            byte [] fileBytes = userService.getUserProfileImage(user);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
-            headers.setContentDisposition(ContentDisposition.builder("attachment").filename(email.split("@")[0].replace(".","_")+"_profile_img.png").build());
-            return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+        if (user == null) {
+            return new ResponseEntity<>("No Users Present with Email", HttpStatus.FOUND);
+        }
+        byte[] fileBytes = userService.getUserProfileImage(user);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(email.split("@")[0].replace(".", "_") + "_profile_img.png").build());
+        return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
     }
 
     @PostMapping("/profileImage")
@@ -93,11 +91,10 @@ public class UserController {
         String email = authentication.getName();
 
         boolean imageUploaded = userService.uploadProfileImage(multipartFile, email);
-        if(imageUploaded){
-            return new ResponseEntity<>("Successfully Uploaded",HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("Image Upload Failed!",HttpStatus.INTERNAL_SERVER_ERROR);
+        if (imageUploaded) {
+            return new ResponseEntity<>("Successfully Uploaded", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Image Upload Failed!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -109,21 +106,20 @@ public class UserController {
         String email = authentication.getName();
         UserDTO dbUser = userService.getUserByEmail(email, false);
 
-        if(!dbUser.isProfileImageAdded()){
-            return new ResponseEntity<>("Profile Image doesn't exist",HttpStatus.BAD_REQUEST);
+        if (!dbUser.isProfileImageAdded()) {
+            return new ResponseEntity<>("Profile Image doesn't exist", HttpStatus.BAD_REQUEST);
         }
 
         boolean imageDeleted = userService.deleteProfileImage(dbUser);
-        if(imageDeleted){
-            return new ResponseEntity<>("Successfully Deleted",HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("Image Delete Failed!",HttpStatus.INTERNAL_SERVER_ERROR);
+        if (imageDeleted) {
+            return new ResponseEntity<>("Successfully Deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Image Delete Failed!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<?> getPostsByUser(){
+    public ResponseEntity<?> getPostsByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String email = authentication.getName();

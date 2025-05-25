@@ -23,12 +23,13 @@ public class RedisUtil {
     private String redisAuthKey;
 
     private RedisClient redisClient;
+
     public RedisClient getClient() throws ResourceAccessException {
 
-        if(redisAuthKey.isEmpty() || redisPath.isEmpty() || redisPort.isEmpty()) {
+        if (redisAuthKey.isEmpty() || redisPath.isEmpty() || redisPort.isEmpty()) {
             throw new ResourceAccessException("Error accessing redis config data");
         }
-        if(this.redisClient!=null){
+        if (this.redisClient != null) {
             return this.redisClient;
         }
         RedisURI uri = RedisURI.Builder

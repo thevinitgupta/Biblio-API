@@ -23,7 +23,7 @@ public class CommentDTO {
     private CommentReactionDTO commentReactions;
     private List<CommentDTO> replies = new ArrayList<>();
 
-    public CommentDTO(Comment comment){
+    public CommentDTO(Comment comment) {
         this.id = comment.getId();
         this.postId = comment.getPostId();
         this.content = comment.getContent();

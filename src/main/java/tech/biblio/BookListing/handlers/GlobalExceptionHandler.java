@@ -43,8 +43,8 @@ public class GlobalExceptionHandler {
             FileUploadException.class,
             BookUploadException.class,
             CommentNotFoundException.class
-            })
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e){
+    })
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e) {
         ErrorResponse errorResponse = resourceExceptionHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
             AccessTokenValidationException.class,
             RefreshTokenValidationException.class
     })
-    public ResponseEntity<ErrorResponse> handleResourceException(Exception e){
+    public ResponseEntity<ErrorResponse> handleResourceException(Exception e) {
         ErrorResponse errorResponse = authenticationExceptionHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
             GoogleApiBooksException.class,
             RateLimitExceededException.class
     })
-    public ResponseEntity<ErrorResponse> handleServicesException(Exception e){
+    public ResponseEntity<ErrorResponse> handleServicesException(Exception e) {
         ErrorResponse errorResponse = servicesExceptionalHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
             FileTypeNotAllowedException.class,
             IOException.class
     })
-    public ResponseEntity<ErrorResponse> handleInvalidValueException(Exception e){
+    public ResponseEntity<ErrorResponse> handleInvalidValueException(Exception e) {
         ErrorResponse errorResponse = invalidValueExceptionHandler.handler(e);
         log.error(jsonConverter.getJsonObject(errorResponse));
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
@@ -90,10 +90,10 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e){
+    public ResponseEntity<?> handleException(Exception e) {
         log.error(e.getLocalizedMessage());
         return new ResponseEntity<>(
-                "An unexpected error occurred: "+e.getMessage(),
+                "An unexpected error occurred: " + e.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

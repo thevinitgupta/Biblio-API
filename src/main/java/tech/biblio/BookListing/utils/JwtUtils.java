@@ -21,23 +21,21 @@ import java.util.Objects;
 public class JwtUtils {
 
 
-
-
-    public String generateAccessToken(HashMap<String ,Object> claims, Environment environment){
-        if(!claims.containsKey("username")) throw new IllegalArgumentException("Username Missing");
+    public String generateAccessToken(HashMap<String, Object> claims, Environment environment) {
+        if (!claims.containsKey("username")) throw new IllegalArgumentException("Username Missing");
         String accessTokenExpiry = ApplicationConstants.ACCESS_TOKEN_EXPIRY;
         long accessTokenTime = Long.parseLong(Objects.requireNonNull(environment.getProperty(accessTokenExpiry)));
         return generateJwtTokenFromUsername("Access-Token", claims, accessTokenTime, environment);
     }
 
-    public String generateRefreshToken(HashMap<String ,Object> claims, Environment environment){
+    public String generateRefreshToken(HashMap<String, Object> claims, Environment environment) {
         String refreshTokenExpiry = ApplicationConstants.REFRESH_TOKEN_EXPIRY;
         long refreshTokenTime = Long.parseLong(Objects.requireNonNull(environment.getProperty(refreshTokenExpiry)));
         return generateJwtTokenFromUsername("Refresh-Token", claims, refreshTokenTime, environment);
     }
 
-    private String generateJwtTokenFromUsername( String subject, HashMap<String ,Object> claims, long tokenExpiry, Environment env){
-        if(env!=null){
+    private String generateJwtTokenFromUsername(String subject, HashMap<String, Object> claims, long tokenExpiry, Environment env) {
+        if (env != null) {
             String secret = env.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -48,14 +46,14 @@ public class JwtUtils {
                     .claims(claims)
                     // add username and authorities in the claims object being passed for Access Token, only keep username for Refresh Token
                     .issuedAt(new Date())
-                    .expiration(new Date(new Date().getTime()+tokenExpiry))
+                    .expiration(new Date(new Date().getTime() + tokenExpiry))
                     .signWith(secretKey).compact();
         }
         return null;
     }
 
-    public String getUsernameFromJwt(String jwtToken, Environment environment){
-        if(environment!=null) {
+    public String getUsernameFromJwt(String jwtToken, Environment environment) {
+        if (environment != null) {
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -65,9 +63,9 @@ public class JwtUtils {
         return null;
     }
 
-    public Claims getClaimsFromJwt(String jwtToken, Environment environment){
-        if(environment!=null) {
-            System.out.println("Get Claims : "+jwtToken);
+    public Claims getClaimsFromJwt(String jwtToken, Environment environment) {
+        if (environment != null) {
+            System.out.println("Get Claims : " + jwtToken);
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -76,8 +74,8 @@ public class JwtUtils {
         return null;
     }
 
-    public String getTokenIdFromJwt(String refreshToken, Environment environment){
-        if(environment!=null) {
+    public String getTokenIdFromJwt(String refreshToken, Environment environment) {
+        if (environment != null) {
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
                     ApplicationConstants.JWT_SECRET_DEFAULT);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -88,7 +86,7 @@ public class JwtUtils {
     }
 
 
-    public boolean validateAccessToken(String jwtToken, Environment environment){
+    public boolean validateAccessToken(String jwtToken, Environment environment) {
         String validationMessage = "";
         try {
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
@@ -96,31 +94,31 @@ public class JwtUtils {
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwtToken);
             return true;
-        }catch (SignatureException e){
+        } catch (SignatureException e) {
             validationMessage = "Invalid JWT Signature";
-            log.error(validationMessage+" : {}", e.getMessage());
-        }catch (MalformedJwtException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (MalformedJwtException e) {
             validationMessage = "Invalid JWT Token";
-            log.error(validationMessage+" : {}", e.getMessage());
-        }catch (ExpiredJwtException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
             validationMessage = "";
-            log.error("Expired Access Token" +" : {}",e.getMessage());
-            throw new ExpiredJwtException(e.getHeader(), e.getClaims(),"Expired Access Token");
-        }catch (UnsupportedJwtException e){
+            log.error("Expired Access Token" + " : {}", e.getMessage());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Expired Access Token");
+        } catch (UnsupportedJwtException e) {
             validationMessage = "JWT Token is unsupported";
-            log.error(validationMessage+" : {}",e.getMessage());
-        }catch (IllegalArgumentException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
             validationMessage = "JWT claims string is empty";
-            log.error(validationMessage+" : {}",e.getMessage());
-        }finally {
-            if(!validationMessage.isEmpty()){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } finally {
+            if (!validationMessage.isEmpty()) {
                 throw new AccessTokenValidationException(validationMessage);
             }
         }
         return false;
     }
 
-    public boolean validateRefreshToken(String jwtToken, Environment environment){
+    public boolean validateRefreshToken(String jwtToken, Environment environment) {
         String validationMessage = "";
         try {
             String secret = environment.getProperty(ApplicationConstants.JWT_SECRET,
@@ -128,23 +126,23 @@ public class JwtUtils {
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwtToken);
             return true;
-        }catch (SignatureException e){
+        } catch (SignatureException e) {
             validationMessage = "Invalid JWT Signature";
-            log.error(validationMessage+" : {}", e.getMessage());
-        }catch (MalformedJwtException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (MalformedJwtException e) {
             validationMessage = "Invalid JWT Token";
-            log.error(validationMessage+" : {}", e.getMessage());
-        }catch (ExpiredJwtException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
             validationMessage = "Expired Refresh Token";
-            log.error(validationMessage+" : {}",e.getMessage());
-        }catch (UnsupportedJwtException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
             validationMessage = "JWT Token is unsupported";
-            log.error(validationMessage+" : {}",e.getMessage());
-        }catch (IllegalArgumentException e){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
             validationMessage = "JWT claims string is empty";
-            log.error(validationMessage+" : {}",e.getMessage());
-        }finally {
-            if(!validationMessage.isEmpty()){
+            log.error(validationMessage + " : {}", e.getMessage());
+        } finally {
+            if (!validationMessage.isEmpty()) {
                 throw new RefreshTokenValidationException(validationMessage);
             }
         }
@@ -152,7 +150,7 @@ public class JwtUtils {
     }
 
 
-    public String getUsernameFromAccessToken(String jwtToken, String secret){
+    public String getUsernameFromAccessToken(String jwtToken, String secret) {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return String.valueOf(
                 Jwts.parser()
