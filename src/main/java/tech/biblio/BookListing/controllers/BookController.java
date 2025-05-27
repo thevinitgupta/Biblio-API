@@ -28,12 +28,12 @@ public class BookController {
     @RateLimited
     @GetMapping("search")
     public ResponseEntity<?> searchBooks(@RequestParam String query) throws GoogleApiBooksException {
-        System.out.println("Google Books API Key : "+googleBooksApiKey);
-        if(query==null || query.isEmpty()){
+        System.out.println("Google Books API Key : " + googleBooksApiKey);
+        if (query == null || query.isEmpty()) {
             return new ResponseEntity<>(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST.getReasonPhrase(),"Empty Search String"),
+                    new ResponseDTO(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Empty Search String"),
                     HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(googleBooksUtil.getBooksData(query, googleBooksApiKey), HttpStatus.OK );
+        return new ResponseEntity<>(googleBooksUtil.getBooksData(query, googleBooksApiKey), HttpStatus.OK);
     }
 }

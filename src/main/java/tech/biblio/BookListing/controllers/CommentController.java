@@ -29,36 +29,36 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        if(helper.isNullOrEmpty(createCommentDTO.content()) ||
-                helper.isNullOrEmpty(createCommentDTO.postId())){
+        if (helper.isNullOrEmpty(createCommentDTO.content()) ||
+                helper.isNullOrEmpty(createCommentDTO.postId())) {
             throw new BadRequestException("Comment body and Post ID mandatory");
         }
 
-        if(createCommentDTO.content().length()>750) {
+        if (createCommentDTO.content().length() > 750) {
             throw new BadRequestException("Comment cannot be more than 750 characters");
         }
 
-        CommentDTO commentDTO = commentService.createComment(username,createCommentDTO);
+        CommentDTO commentDTO = commentService.createComment(username, createCommentDTO);
 
         return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<FetchCommentsResponseDTO> fetchPaginatedCommentsForPost(@PathVariable String postId,
-                                                                                  @RequestParam(required = false,defaultValue = "1") int page,
+                                                                                  @RequestParam(required = false, defaultValue = "1") int page,
                                                                                   @RequestParam(required = false, defaultValue = "10") int results) throws BadRequestException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        if(helper.isNullOrEmpty(username)){
+        if (helper.isNullOrEmpty(username)) {
             username = "";
         }
 
-        System.out.println(postId+", "+page+", "+results);
-        if(helper.isNullOrEmpty(postId)){
+        System.out.println(postId + ", " + page + ", " + results);
+        if (helper.isNullOrEmpty(postId)) {
             throw new BadRequestException("Cannot fetch comments for null Post ID");
         }
         return new ResponseEntity<>(
-                        commentService.fetchCommentsForPost(postId,page,results,username),
+                commentService.fetchCommentsForPost(postId, page, results, username),
                 HttpStatus.OK);
     }
 
@@ -67,7 +67,7 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        if(helper.isNullOrEmpty(commentId)){
+        if (helper.isNullOrEmpty(commentId)) {
             throw new BadRequestException("Comment ID cannot be null/empty");
         }
 
@@ -75,7 +75,7 @@ public class CommentController {
         return new ResponseEntity<>(new ResponseDTO(
                 HttpStatus.OK.getReasonPhrase(),
                 "Comment Deleted"
-        ),HttpStatus.OK);
+        ), HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
@@ -84,15 +84,15 @@ public class CommentController {
         String username = authentication.getName();
 
 
-        if(helper.isNullOrEmpty(commentId)){
+        if (helper.isNullOrEmpty(commentId)) {
             throw new BadRequestException("Comment ID cannot be null/empty");
         }
 
-        commentService.updateComment(commentId,  username, commentRequestDTO);
+        commentService.updateComment(commentId, username, commentRequestDTO);
         return new ResponseEntity<>(new ResponseDTO(
                 HttpStatus.OK.getReasonPhrase(),
                 "Comment Updated"
-        ),HttpStatus.OK);
+        ), HttpStatus.OK);
     }
 
 }

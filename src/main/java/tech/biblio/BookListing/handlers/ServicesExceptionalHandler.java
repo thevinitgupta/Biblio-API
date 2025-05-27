@@ -19,8 +19,7 @@ public class ServicesExceptionalHandler {
                     .errorDescription(ex.getMessage())
                     .httpStatus(HttpStatus.TOO_MANY_REQUESTS)
                     .build();
-        }
-        else if (ex instanceof AppwriteException) {
+        } else if (ex instanceof AppwriteException) {
             return ErrorResponse.builder()
                     .error("AppwriteException")
                     .status(HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase())

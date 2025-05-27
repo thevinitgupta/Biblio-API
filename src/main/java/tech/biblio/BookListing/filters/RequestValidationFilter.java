@@ -20,15 +20,15 @@ public class RequestValidationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        JwtUtils jwtUtils= new JwtUtils();
-        try{
+        JwtUtils jwtUtils = new JwtUtils();
+        try {
             String authHeader = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
-            if(authHeader!=null && StringUtils.startsWith(authHeader, "Basic ")){
+            if (authHeader != null && StringUtils.startsWith(authHeader, "Basic ")) {
                 authHeader = authHeader.trim();
                 String token = authHeader.substring(6);
                 Environment env = getEnvironment();
                 String email = jwtUtils.getUsernameFromJwt(token, env);
-                if(email.toLowerCase().contains("test")){
+                if (email.toLowerCase().contains("test")) {
                     httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     httpResponse.setContentType("text/plain");
 
@@ -39,11 +39,10 @@ public class RequestValidationFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new BadCredentialsException("Failed to decode basic Authentication Token");
-        }
-        finally {
-            filterChain.doFilter(request,response);
+        } finally {
+            filterChain.doFilter(request, response);
         }
     }
 

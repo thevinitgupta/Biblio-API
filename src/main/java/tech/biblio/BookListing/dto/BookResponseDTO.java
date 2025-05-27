@@ -13,6 +13,7 @@ public class BookResponseDTO {
     public BookResponseDTO() {
 
     }
+
     @JsonProperty("items")
     private List<Book> items;
 }

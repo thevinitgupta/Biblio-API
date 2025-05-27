@@ -22,36 +22,37 @@ public class JWTValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
-           String authHeader = request.getHeader(ApplicationConstants.JWT_HEADER);
+        try {
+            String authHeader = request.getHeader(ApplicationConstants.JWT_HEADER);
             JwtUtils jwtUtils = new JwtUtils();
 
-           if(authHeader!=null) {
-               authHeader = authHeader.trim();
+            if (authHeader != null) {
+                authHeader = authHeader.trim();
 
-               String jwtToken = authHeader.substring(Math.min(authHeader.length()-1, 6));
-               jwtToken = jwtToken.trim();
-               Environment env = getEnvironment();
-               System.out.println("Access Token : |"+jwtToken);
-               boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception if Invalid, return false if Expired
-               Claims claims = jwtUtils.getClaimsFromJwt(jwtToken,env);
-               if(claims==null){
-                   throw new BadCredentialsException("Invalid Token Received!");
-               }
-               String username = String.valueOf(claims.get("username"));
-               String authorities = String.valueOf(claims.get("authorities"));
-               log.info("Username : {}",username);
-               log.info("Authorities : {}", authorities);
-               UsernamePasswordAuthenticationToken authenticationToken = new
-                       UsernamePasswordAuthenticationToken(username,null,
-                       AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-               SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-           }
-        }finally {
+                String jwtToken = authHeader.substring(Math.min(authHeader.length() - 1, 6));
+                jwtToken = jwtToken.trim();
+                Environment env = getEnvironment();
+                System.out.println("Access Token : |" + jwtToken);
+                boolean isValidAccessToken = jwtUtils.validateAccessToken(jwtToken, env); // throws Exception if Invalid, return false if Expired
+                Claims claims = jwtUtils.getClaimsFromJwt(jwtToken, env);
+                if (claims == null) {
+                    throw new BadCredentialsException("Invalid Token Received!");
+                }
+                String username = String.valueOf(claims.get("username"));
+                String authorities = String.valueOf(claims.get("authorities"));
+                log.info("Username : {}", username);
+                log.info("Authorities : {}", authorities);
+                UsernamePasswordAuthenticationToken authenticationToken = new
+                        UsernamePasswordAuthenticationToken(username, null,
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } finally {
 
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
+
     private void handleAccessDenied(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set the status code
         response.setContentType("application/json");

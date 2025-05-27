@@ -65,7 +65,7 @@ public class AuthController {
 
 
     @GetMapping("register")
-    public ResponseEntity<?> register(){
+    public ResponseEntity<?> register() {
         return new ResponseEntity<>("Cannot Get Here. Only POST Allowed",
                 HttpStatus.NOT_IMPLEMENTED);
     }
@@ -73,22 +73,22 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest,
                                                   HttpServletResponse httpResponse,
-                                                  HttpServletRequest httpRequest){
+                                                  HttpServletRequest httpRequest) {
         UserDTO dbUser = null;
         String accessToken = null;
         String refreshToken = null;
         String refreshTokenID = null;
 
-        if(loginRequest==null){
+        if (loginRequest == null) {
             return new ResponseEntity<>(
-                    new LoginResponseDTO(HttpStatus.BAD_REQUEST.getReasonPhrase(),"Credentials missing",null),
+                    new LoginResponseDTO(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Credentials missing", null),
                     HttpStatus.BAD_REQUEST);
         }
         try {
             dbUser = userService.getUserByEmail(loginRequest.email(), false);
-            if(null==dbUser) {
+            if (null == dbUser) {
                 return new ResponseEntity<>(
-                        new LoginResponseDTO(HttpStatus.NOT_FOUND.getReasonPhrase(),"No user with email exists",null),
+                        new LoginResponseDTO(HttpStatus.NOT_FOUND.getReasonPhrase(), "No user with email exists", null),
                         HttpStatus.NOT_FOUND);
             }
 
@@ -98,8 +98,8 @@ public class AuthController {
 
             Authentication authenticationResponse = authenticationManager.authenticate(authentication);
 
-            if(null != authenticationResponse && authenticationResponse.isAuthenticated()){
-                if(env==null) throw new NullPointerException();
+            if (null != authenticationResponse && authenticationResponse.isAuthenticated()) {
+                if (env == null) throw new NullPointerException();
                 HashMap<String, Object> accessTokenClaims = new HashMap<>();
                 accessTokenClaims.put("username", authenticationResponse.getName());
                 accessTokenClaims.put("authorities", authenticationResponse.getAuthorities()
@@ -109,7 +109,7 @@ public class AuthController {
                 HashMap<String, Object> refreshTokenClaimsMap = new HashMap<>();
                 refreshTokenID = UniqueID.generateId();
                 refreshTokenClaimsMap.put("username", authenticationResponse.getName());
-                refreshTokenClaimsMap.put("token-id",refreshTokenID);
+                refreshTokenClaimsMap.put("token-id", refreshTokenID);
                 refreshToken = jwtUtils.generateRefreshToken(refreshTokenClaimsMap, env);
 
                 String setCookieHeader = String.format(
@@ -143,10 +143,10 @@ public class AuthController {
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(new LoginResponseDTO(
-                        HttpStatus.OK.getReasonPhrase(),
-                        "Login Successfull",
-                        accessToken
-                ));
+                                HttpStatus.OK.getReasonPhrase(),
+                                "Login Successfull",
+                                accessToken
+                        ));
             }
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -156,7 +156,7 @@ public class AuthController {
                             accessToken
                     ));
 
-        }finally {
+        } finally {
 
         }
 
@@ -165,9 +165,9 @@ public class AuthController {
 
     // TODO : Convert returns to JSON always
     @PostMapping("register")
-    public ResponseEntity<?> addUser(@RequestBody RegisterRequestDTO registerRequest){
+    public ResponseEntity<?> addUser(@RequestBody RegisterRequestDTO registerRequest) {
         User savedUser = null;
-        if(registerRequest==null) {
+        if (registerRequest == null) {
             return new ResponseEntity<>(new RegisterResponseDTO(
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "User Registration Data missing"
@@ -175,20 +175,20 @@ public class AuthController {
         }
         try {
             User user = User.builder()
-                            .firstName(registerRequest.firstName())
-                                    .lastName(registerRequest.lastName())
-                                            .roles(roleService.getRoles("ROLE_USER"))
+                    .firstName(registerRequest.firstName())
+                    .lastName(registerRequest.lastName())
+                    .roles(roleService.getRoles("ROLE_USER"))
                     .email(registerRequest.email())
                     .password(registerRequest.password())
                     .posts(new ArrayList<Post>())
                     .profileImageAdded(false)
                     .build();
-            AuthenticationUser authenticationUser = UserMapper.authUser(user,roleService.getRoles("ROLE_USER"), passwordEncoder);
+            AuthenticationUser authenticationUser = UserMapper.authUser(user, roleService.getRoles("ROLE_USER"), passwordEncoder);
             savedUser = userService.addUser(user);
 
             AuthenticationUser savedAuthUser = authService.addUser(authenticationUser);
 
-            if(savedAuthUser==null) throw new AuthorizationServiceException("User not created.");
+            if (savedAuthUser == null) throw new AuthorizationServiceException("User not created.");
             StringBuilder saveMessage = new StringBuilder()
                     .append("User with email : ")
                     .append(savedUser.getEmail())
@@ -197,23 +197,21 @@ public class AuthController {
                     HttpStatus.CREATED.getReasonPhrase(),
                     saveMessage.toString()
             ), HttpStatus.CREATED);
-        }catch (AuthorizationServiceException authException){
+        } catch (AuthorizationServiceException authException) {
             userService.deleteUser(savedUser);
             return new ResponseEntity<>(ErrorResponse.builder().error("Unknown Error")
                     .errorDescription("User not registered, try again")
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .httpStatus(HttpStatus.BAD_REQUEST).build(),
                     HttpStatus.BAD_REQUEST);
-        }
-        catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return new ResponseEntity<>(ErrorResponse.builder().error("Invalid Email")
                     .errorDescription("User with Email already exists")
                     .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                     .httpStatus(HttpStatus.BAD_REQUEST).build(),
                     HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            if(savedUser!=null) {
+        } catch (Exception e) {
+            if (savedUser != null) {
                 userService.deleteUser(savedUser);
             }
             String message = e instanceof MongoException ? "Error Saving in Database" : "User not registered, try again";
@@ -230,12 +228,12 @@ public class AuthController {
     @PostMapping("access-token")
     public ResponseEntity<?> generateAccessToken(
             @CookieValue(name = "refreshToken", defaultValue = "") String refreshToken,
-            HttpServletRequest request){
+            HttpServletRequest request) {
         try {
-            if(refreshToken==null || refreshToken.isEmpty())
+            if (refreshToken == null || refreshToken.isEmpty())
                 throw new RefreshTokenValidationException("No Refresh Token found");
 
-            if(env!=null){
+            if (env != null) {
                 boolean validateTokenFormat = jwtUtils.validateRefreshToken(refreshToken, env);
                 final Claims claimsFromJwt = jwtUtils.getClaimsFromJwt(refreshToken, env);
                 boolean validateDbToken = refreshTokenService.checkValidity(
@@ -245,7 +243,7 @@ public class AuthController {
                  COMPLETED : 2. Add access token generation
                  TODO : 3. Move Token Building Logic to service class
                 */
-                if(validateTokenFormat && validateDbToken){
+                if (validateTokenFormat && validateDbToken) {
                     String accessToken = "";
                     UserDTO user = userService.getUserByEmail(
                             claimsFromJwt.get("username", String.class), false);
@@ -253,7 +251,7 @@ public class AuthController {
                     HashMap<String, Object> accessTokenClaims = new HashMap<>();
                     accessTokenClaims.put("username", user.getEmail());
                     accessTokenClaims.put("authorities", userService.getUserAuthorities(
-                            user.getEmail())
+                                    user.getEmail())
                             .stream().map(GrantedAuthority::getAuthority)
                             .collect(Collectors.joining(",")));
 
@@ -268,7 +266,7 @@ public class AuthController {
                 }
             }
 
-        }finally {
+        } finally {
 
         }
         return null;
@@ -278,17 +276,18 @@ public class AuthController {
     public ResponseEntity<?> logoutCurrentSession(
             @CookieValue(name = "refreshToken", defaultValue = "") String refreshToken,
             HttpServletRequest httpRequest,
-            HttpServletResponse httpResponse){
+            HttpServletResponse httpResponse) {
         try {
-            if(refreshToken==null || refreshToken.isEmpty()) throw new RefreshTokenValidationException("No Refresh Token found");
+            if (refreshToken == null || refreshToken.isEmpty())
+                throw new RefreshTokenValidationException("No Refresh Token found");
 
-            if(env!=null){
+            if (env != null) {
                 boolean refreshTokenValidation = jwtUtils.validateRefreshToken(refreshToken, env);
-                String tokenId = jwtUtils.getTokenIdFromJwt(refreshToken,env);
-                if(tokenId==null) throw new RefreshTokenValidationException("Invalid Refresh Token found");
+                String tokenId = jwtUtils.getTokenIdFromJwt(refreshToken, env);
+                if (tokenId == null) throw new RefreshTokenValidationException("Invalid Refresh Token found");
 
                 boolean invalidated = refreshTokenService.invalidateToken(tokenId);
-                if(invalidated) {
+                if (invalidated) {
                     String setCookieHeader = String.format(
                             "refreshToken=%s; HttpOnly; Secure; Path=/; Max-Age=%d; SameSite=None",
                             null,
@@ -298,13 +297,12 @@ public class AuthController {
                     httpResponse.setHeader("Set-Cookie", setCookieHeader);
 
                     return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
-                }
-                else {
+                } else {
                     return new ResponseEntity<>("Something went wrong while logging out, please try again", HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
 
-        }finally {
+        } finally {
 
         }
         return new ResponseEntity<>("Something went wrong while logging out, please try again", HttpStatus.INTERNAL_SERVER_ERROR);

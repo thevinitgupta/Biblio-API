@@ -14,9 +14,9 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public Collection<Role> getRoles(String ...roleStrings){
+    public Collection<Role> getRoles(String... roleStrings) {
         Set<Role> roles = new HashSet<>();
-        for(String roleString : roleStrings){
+        for (String roleString : roleStrings) {
             Role role = roleRepository.findByName(roleString);
             roles.add(role);
         }

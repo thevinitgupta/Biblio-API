@@ -8,13 +8,14 @@ import java.util.HashMap;
 
 @Component
 public class ReactionUtil {
-    public HashMap<ReactionType, Integer> initReactionsCount(){
+    public HashMap<ReactionType, Integer> initReactionsCount() {
         HashMap<ReactionType, Integer> reactionsCount = new HashMap<>();
         Arrays.stream(ReactionType.values()).forEach(reactionType -> {
             reactionsCount.put(reactionType, 0);
         });
         return reactionsCount;
     }
+
     public String encodeKey(String key) {
         return key.replace(".", "_");
     }

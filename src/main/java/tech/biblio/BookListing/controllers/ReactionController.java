@@ -33,24 +33,23 @@ public class ReactionController {
 
         String username = authentication.getName();
 
-        if(helper.isNullOrEmpty(username)){
+        if (helper.isNullOrEmpty(username)) {
             username = "";
         }
 
-        if(helper.isNullOrEmpty(entityId)){
+        if (helper.isNullOrEmpty(entityId)) {
             throw new BadRequestException("Reactions can be fetched for specific post/comment only");
         }
 
-        System.out.println("Entity Type :"+entityType);
+        System.out.println("Entity Type :" + entityType);
 
         ReactionsDTO reactionsDTO = reactionService
                 .getReactions(entityType, entityId, username);
         ReactionsResponseDTO.ReactionsResponseDTOBuilder reactResDTOBuilder =
                 ReactionsResponseDTO.builder();
-        if(reactionsDTO.userReactions().isEmpty()){
+        if (reactionsDTO.userReactions().isEmpty()) {
             reactResDTOBuilder.message("No reactions found for user");
-        }
-        else {
+        } else {
             reactResDTOBuilder.message("Success");
         }
         reactResDTOBuilder.reactions(reactionsDTO);
@@ -63,7 +62,7 @@ public class ReactionController {
 
         String username = authentication.getName();
 
-        if(helper.isNullOrEmpty(reactionRequestDTO.entityId())){
+        if (helper.isNullOrEmpty(reactionRequestDTO.entityId())) {
             throw new BadRequestException("Entity ID is empty");
         }
 

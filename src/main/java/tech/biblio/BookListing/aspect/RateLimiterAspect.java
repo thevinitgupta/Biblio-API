@@ -28,32 +28,33 @@ public class RateLimiterAspect {
 
 
     private final RateLimiterConfig rateLimiterConfig;
-    public RateLimiterAspect(@Lazy RateLimiterConfig rateLimiterConfig){
+
+    public RateLimiterAspect(@Lazy RateLimiterConfig rateLimiterConfig) {
         this.rateLimiterConfig = rateLimiterConfig;
     }
+
     @Around("@annotation(tech.biblio.BookListing.annotations.RateLimited)")
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
 
         String rateLimitKey = getRateLimitKey(request);
-        System.out.println("Rate Limit key : "+rateLimitKey);
+        System.out.println("Rate Limit key : " + rateLimitKey);
         Bucket bucket = getOrCreateBucket(rateLimitKey);
 
-        if(bucket.tryConsume(1L)){
+        if (bucket.tryConsume(1L)) {
             return joinPoint.proceed();
-        }
-        else {
+        } else {
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder
                     .getRequestAttributes()).getResponse();
-            if(response!=null){
+            if (response != null) {
                 response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             }
             throw new RateLimitExceededException("Rate Limit Exceeded, please try again after some time");
         }
     }
 
-    private String getRateLimitKey(HttpServletRequest request){
+    private String getRateLimitKey(HttpServletRequest request) {
         String authHeader = request.getHeader(ApplicationConstants.JWT_HEADER);
         JwtUtils jwtUtils = new JwtUtils();
 
@@ -74,7 +75,7 @@ public class RateLimiterAspect {
         return "IP:" + ipAddress;
     }
 
-    private Bucket getOrCreateBucket(String clientKey){
+    private Bucket getOrCreateBucket(String clientKey) {
         return rateLimiterConfig.lettuceBasedProxyManager().builder().build(
                 clientKey,
                 () -> rateLimiterConfig.bucketConfigurationSupplier().get()

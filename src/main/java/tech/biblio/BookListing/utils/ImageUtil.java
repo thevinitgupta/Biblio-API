@@ -28,13 +28,13 @@ public class ImageUtil {
     @Autowired
     private AppwriteUtil appwriteUtil;
 
-    public String getExtension(String fileName){
+    public String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
     public File convertToFile(MultipartFile multipartFile) throws IOException {
 
-        if(multipartFile.isEmpty()) {
+        if (multipartFile.isEmpty()) {
             throw new FileNotFoundException("Uploaded file not found");
         }
         File tempFile = File.createTempFile("temp", this.getExtension(multipartFile.getOriginalFilename()));
@@ -43,8 +43,8 @@ public class ImageUtil {
             throw new FileNotFoundException("File not found at: " + tempFile.getAbsolutePath());
         }
         FileOutputStream fos = new FileOutputStream(tempFile);
-            fos.write(multipartFile.getBytes());
-            fos.close();
+        fos.write(multipartFile.getBytes());
+        fos.close();
 
         return tempFile;
     }
@@ -60,13 +60,12 @@ public class ImageUtil {
                     .scale(0.5)         // Scale down by 50%
                     .outputQuality(0.3) // Set quality to 30% for ~350KB output
                     .toFile(compressedImage);
-        } else if(fileSize>150*1024 && fileSize<=1024*1024){ // Files <= 1MB
+        } else if (fileSize > 150 * 1024 && fileSize <= 1024 * 1024) { // Files <= 1MB
             Thumbnails.of(largeImage)
                     .scale(0.7)           // No scaling for smaller files
                     .outputQuality(0.4) // Set quality to 40%
                     .toFile(compressedImage);
-        }
-        else {
+        } else {
             Thumbnails.of(largeImage)
                     .scale(1)           // No scaling for smaller files
                     .outputQuality(0.4) // Set quality to 40%
@@ -112,7 +111,7 @@ public class ImageUtil {
     }
 
     // delete existing file from Appwrite
-    public void deleteImage(String appId, String bucketId, String apiKey, String fileId) throws AppwriteException{
+    public void deleteImage(String appId, String bucketId, String apiKey, String fileId) throws AppwriteException {
         Client client = appwriteUtil.getClient(appId, apiKey);
 
         Storage storage = new Storage(client);
@@ -160,43 +159,42 @@ public class ImageUtil {
     }
 
     // user initials
-    public byte [] getUserInitials(String appId, String apiKey, String username) throws AppwriteException, ExecutionException, InterruptedException {
-        Client client = appwriteUtil.getClient(appId,apiKey);
+    public byte[] getUserInitials(String appId, String apiKey, String username) throws AppwriteException, ExecutionException, InterruptedException {
+        Client client = appwriteUtil.getClient(appId, apiKey);
         Avatars avatars = new Avatars(client);
 
         CompletableFuture<byte[]> future = new CompletableFuture<>();
 
-        System.out.println("API KEY : "+apiKey+", USERNAME : "+username);
+        System.out.println("API KEY : " + apiKey + ", USERNAME : " + username);
         avatars.getInitials(
                 username,
                 200L,
                 200L,
                 this.pastelColorHex(),
-                new CoroutineCallback<byte[]>((result, error)-> {
-                    if(error != null) {
+                new CoroutineCallback<byte[]>((result, error) -> {
+                    if (error != null) {
                         error.printStackTrace();
                         future.completeExceptionally(error);
-                    }
-                    else {
-                        System.out.println("Get avatars result : "+result);
+                    } else {
+                        System.out.println("Get avatars result : " + result);
                         future.complete((byte[]) result);
                     }
                 })
         );
-        byte [] avatar = future.get();
+        byte[] avatar = future.get();
 
         return avatar;
     }
 
     // random pastel color
-    public String pastelColorHex(){
-        int red = (int)(Math.random()*128) + 127;
-        int blue = (int)(Math.random()*128) + 127;
-        int green = (int)(Math.random()*128) + 127;
-        Color randomColor = new Color(red,green,blue);
+    public String pastelColorHex() {
+        int red = (int) (Math.random() * 128) + 127;
+        int blue = (int) (Math.random() * 128) + 127;
+        int green = (int) (Math.random() * 128) + 127;
+        Color randomColor = new Color(red, green, blue);
 
         String hex = Integer.toHexString(randomColor.getRGB()).substring(2);
-        System.out.println("Random HEX : "+hex);
+        System.out.println("Random HEX : " + hex);
         return hex;
     }
 
@@ -207,18 +205,17 @@ public class ImageUtil {
         File compressedImage = new File(fileName);
 
         // Compression logic based on size
-        if (fileSize > 2 * 1024*1024 && fileSize <= 5 * 1024*1024) { // Between 2MB and 5MB
+        if (fileSize > 2 * 1024 * 1024 && fileSize <= 5 * 1024 * 1024) { // Between 2MB and 5MB
             Thumbnails.of(largeImage)
                     .scale(0.5)         // Scale down by 50%
                     .outputQuality(0.3) // Set quality to 30% for ~350KB output
                     .toFile(compressedImage);
-        } else if(fileSize>1024*1024 && fileSize<= 2 * 1024*1024){ // Files <= 2MB
+        } else if (fileSize > 1024 * 1024 && fileSize <= 2 * 1024 * 1024) { // Files <= 2MB
             Thumbnails.of(largeImage)
                     .scale(0.7)           // No scaling for smaller files
                     .outputQuality(0.4) // Set quality to 40%
                     .toFile(compressedImage);
-        }
-        else {
+        } else {
             Thumbnails.of(largeImage)
                     .scale(1)           // No scaling for smaller files
                     .outputQuality(0.4) // Set quality to 40%

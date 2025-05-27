@@ -5,7 +5,7 @@ import tech.biblio.BookListing.entities.Post;
 
 
 public class PostMapper {
-    public static PostDTO postDTO(Post post){
+    public static PostDTO postDTO(Post post) {
         return PostDTO.builder()
                 .id(post.getId().toHexString())
                 .title(post.getTitle())
@@ -18,7 +18,8 @@ public class PostMapper {
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }
-    public static PostDTO postDTOWithBook(Post post){
+
+    public static PostDTO postDTOWithBook(Post post) {
         return PostDTO.builder()
                 .id(post.getId().toHexString())
                 .title(post.getTitle())

@@ -12,9 +12,9 @@ public class AuthoritiesLoggingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
+        if (authentication != null) {
             log.info("{} logged in with authorities : {}", authentication.getName(), authentication.getAuthorities().toString());
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 }

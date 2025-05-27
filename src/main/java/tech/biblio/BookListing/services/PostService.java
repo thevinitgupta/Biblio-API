@@ -67,15 +67,15 @@ public class PostService {
     private String postImageBucket;
 
     @Transactional
-    public Post addPost(String email, CreatePostDTO createPostDTO){
+    public Post addPost(String email, CreatePostDTO createPostDTO) {
 
-        if(createPostDTO.taggedBook()==null){
+        if (createPostDTO.taggedBook() == null) {
             throw new MissingResourceException("Book not added for post", "Book", "TaggedBook");
         }
 
         Book savedBook = bookService.saveBook(createPostDTO.taggedBook());
-        if(savedBook==null) {
-            throw new BookUploadException("Error while saving book :"+createPostDTO.taggedBook().getBookId());
+        if (savedBook == null) {
+            throw new BookUploadException("Error while saving book :" + createPostDTO.taggedBook().getBookId());
         }
 
         Post post = Post.builder()
@@ -91,11 +91,11 @@ public class PostService {
                 .build();
 
         UserDTO user = userService.getUserByEmail(email, true);
-        if(user==null) throw new UserNotFoundException("User with Email not Found", email);
+        if (user == null) throw new UserNotFoundException("User with Email not Found", email);
 
         Post saved = postRepository.save(post);
-        if(user.getPosts()==null){
-            user.setPosts(new ArrayList<>( ));
+        if (user.getPosts() == null) {
+            user.setPosts(new ArrayList<>());
         }
         user.getPosts().add(saved);
         System.out.println(user.toString());
@@ -114,10 +114,10 @@ public class PostService {
     // DONE : Move Post DTO Mapping from Controller to Here
     // DONE : Create fetchPostsDTO and Add hasMore variable, total and current Page
     // TODO : Sorting not working
-    public  FetchPostsDTO getAll(int page, int offset){
+    public FetchPostsDTO getAll(int page, int offset) {
 
         int adjustedPage = page > 0 ? page - 1 : 0;
-        Pageable paginateAndSortByUpdatedDesc = PageRequest.of(adjustedPage,offset, Sort.by("updatedAt").descending());
+        Pageable paginateAndSortByUpdatedDesc = PageRequest.of(adjustedPage, offset, Sort.by("updatedAt").descending());
 
         Page<Post> posts = postRepository.findAll(paginateAndSortByUpdatedDesc);
 
@@ -125,13 +125,13 @@ public class PostService {
                 new Query(), Post.class
         );
 
-        long currCount = ((long) page*offset) + posts.getSize();
+        long currCount = ((long) page * offset) + posts.getSize();
 
         List<PostDTO> userPostsDTO = posts.stream()
-            .map(post -> {
-           post.setLikes((int)reactionService.countTotalReactions(EntityType.POST, post.getId().toString()));
-           return post;
-        }).map((PostMapper::postDTO))
+                .map(post -> {
+                    post.setLikes((int) reactionService.countTotalReactions(EntityType.POST, post.getId().toString()));
+                    return post;
+                }).map((PostMapper::postDTO))
                 .toList();
 
 
@@ -140,7 +140,7 @@ public class PostService {
                         adjustedPage,
                         totalCount,
                         (int) Math.ceil((double) totalCount / offset),
-                        currCount<totalCount ));
+                        currCount < totalCount));
     }
 
     public Post getById(String id) {
@@ -159,7 +159,7 @@ public class PostService {
             FileNotFoundException, FileTypeNotAllowedException, AppwriteException, IOException, ExecutionException, InterruptedException {
         File file = null;
         file = imageUtil.convertToFile(multipartFile);
-        if(file.length() > 5*1024*1024) {
+        if (file.length() > 5 * 1024 * 1024) {
             throw new FileTypeNotAllowedException("Max file size 5MB allowed", file.length() / 1024 + "mb", "5MB");
         }
         System.out.println("Project ID : " + projectId);
@@ -186,7 +186,7 @@ public class PostService {
     }
 
     // TODO : Get Post Image
-    public byte [] getPostImage(String imageId) throws AppwriteException, ExecutionException, InterruptedException {
+    public byte[] getPostImage(String imageId) throws AppwriteException, ExecutionException, InterruptedException {
 
         return imageUtil.getImagePreview(projectId, postImageBucket, apiKey, imageId);
 

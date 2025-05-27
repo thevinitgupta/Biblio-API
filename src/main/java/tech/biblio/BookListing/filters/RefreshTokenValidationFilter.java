@@ -16,17 +16,17 @@ public class RefreshTokenValidationFilter extends OncePerRequestFilter {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
-                        System.out.println("Cookie Received : "+cookie.getValue());
+                    System.out.println("Cookie Received : " + cookie.getValue());
                     if ("refresh-token".equals(cookie.getName())) {
                         // Found the refresh-token, handle it as needed
                         String refreshToken = cookie.getValue();
-                        System.out.println("Refresh Token Received : "+refreshToken);
+                        System.out.println("Refresh Token Received : " + refreshToken);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Exception while reading cookies");
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

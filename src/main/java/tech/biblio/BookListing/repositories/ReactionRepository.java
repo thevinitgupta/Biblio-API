@@ -39,8 +39,8 @@ public interface ReactionRepository extends MongoRepository<Reaction, ObjectId> 
                     "'lastModifiedOn': 1, " +
                     "'reactionCount': 1 }")
     Optional<Reaction> findByEntityIdAndEntityTypeAggregated(String entityId,
-                                                                       EntityType entityType,
-                                                                       String userId);
+                                                             EntityType entityType,
+                                                             String userId);
 
     @Query(value = "{ 'entityId': ?0, 'entityType': ?1 }",
             fields = "{ " +
@@ -49,5 +49,5 @@ public interface ReactionRepository extends MongoRepository<Reaction, ObjectId> 
                     "'entityType': 1, " +
                     "'reactionCount': 1 }")
     Optional<Reaction> findReactionsByEntityIdAndEntityType(String entityId,
-                                                             EntityType entityType);
+                                                            EntityType entityType);
 }
