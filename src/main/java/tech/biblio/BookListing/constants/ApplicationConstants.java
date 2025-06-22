@@ -12,4 +12,5 @@ public final class ApplicationConstants {
 
     public static final String REFRESH_TOKEN_EXPIRY = "TEST_REFRESH_TOKEN_EXPIRATION";
 
+    public static final String RECOMMEND_API_KEY_HEADER = "X-AUTH-TOKEN";
 }
