@@ -19,8 +19,11 @@ import tech.biblio.BookListing.entities.EntityType;
 import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.BookUploadException;
 import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
+import tech.biblio.BookListing.exceptions.PostNotFoundException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
+import tech.biblio.BookListing.external.dto.SearchResponseDataDTO;
 import tech.biblio.BookListing.external.queue.PostVectorQueue;
+import tech.biblio.BookListing.external.vector.SimilaritySearchService;
 import tech.biblio.BookListing.mappers.PostMapper;
 import tech.biblio.BookListing.repositories.PostRepository;
 import tech.biblio.BookListing.utils.Helper;
@@ -34,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -48,6 +52,9 @@ public class PostService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private SimilaritySearchService similaritySearchService;
 
     @Autowired
     private ReactionService reactionService;
@@ -159,6 +166,21 @@ public class PostService {
         );
         return mongoTemplate.findOne(query, Post.class);
 //        return postRepository.findById(postId).orElse(null);
+    }
+
+
+    public List<SimilarPostDTO> getSimilarPostData(String postId){
+        List<SearchResponseDataDTO> searchResponseDataDTO = similaritySearchService
+                .fetchSimilarPostsById(postId);
+        List<SimilarPostDTO> similarPostList = new ArrayList<>();
+        for(SearchResponseDataDTO searchResponseDTO : searchResponseDataDTO){
+            Optional<PostTitleOnly> similarPost = postRepository.getTitleBySlug(searchResponseDTO.id());
+            if(helper.isNullOrEmpty(similarPost.get().title())){
+                throw new PostNotFoundException("Similar post with Post ID :"+searchResponseDTO.id()+" not found");
+            }
+            similarPostList.add(new SimilarPostDTO(similarPost.get().title(), searchResponseDTO.id()));
+        }
+        return similarPostList;
     }
 
 
