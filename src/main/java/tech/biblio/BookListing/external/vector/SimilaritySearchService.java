@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tech.biblio.BookListing.constants.ApplicationConstants;
@@ -44,6 +45,9 @@ public class SimilaritySearchService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.set(ApplicationConstants.RECOMMEND_API_KEY_HEADER, recommendApiKey);
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectionRequestTimeout(30000);
+        requestFactory.setConnectTimeout(5000);
 //        EnqueueRequestBody body = new EnqueueRequestBody(postId);
 
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
