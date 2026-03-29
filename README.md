@@ -1,5 +1,7 @@
 ## MVP 1: User Authentication and Basic Book Posting
 
+![Updated Architecture](./static/images/spring_ai_arch.png)                                    
+
 #### User Authentication
 
   - [x] User registration with email.
