@@ -153,9 +153,14 @@ public class ImageUtil {
                     }
                 })
         );
-        byte[] filePreview = future.get();
-
-        return filePreview;
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof AppwriteException) {
+                throw (AppwriteException) e.getCause();
+            }
+            throw new RuntimeException(e.getCause());
+        }
     }
 
     // user initials

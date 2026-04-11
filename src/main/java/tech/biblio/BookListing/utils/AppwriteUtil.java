@@ -18,7 +18,7 @@ public class AppwriteUtil {
                     .writeTimeout(60, TimeUnit.SECONDS)   // Increase write timeout
                     .build();
             this.appwriteClient = new Client()
-                    .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
+                    .setEndpoint("https://sgp.cloud.appwrite.io/v1") // Your API Endpoint
                     .setProject(appId) // Your project ID
                     .setKey(apiKey);
 

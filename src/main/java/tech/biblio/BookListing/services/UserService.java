@@ -133,8 +133,12 @@ public class UserService {
         if (!user.isProfileImageAdded()) {
             return this.getUserAvatar(user.getFirstName() + " " + user.getLastName());
         }
-        return imageUtil.getImagePreview(projectId, profileImageBucket, apiKey, user.getProfileImageId());
-
+        try{
+            return imageUtil.getImagePreview(projectId, profileImageBucket, apiKey, user.getProfileImageId());
+        } catch (AppwriteException appwriteException){
+            System.out.println("Image Preview Not Found for User : "+user.getEmail());
+            return this.getUserAvatar(user.getFirstName() + " " + user.getLastName());
+        }
     }
 
     public boolean deleteProfileImage(UserDTO user) throws AppwriteException {

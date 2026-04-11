@@ -53,9 +53,9 @@ public class EncryptionFilter extends OncePerRequestFilter {
             HttpServletRequest decryptedRequest = null;
             if (multipartContentType) {
                 filterChain.doFilter(request, response);
-            } else {
-                decryptedRequest = this.processJsonBody(request);
+                return;
             }
+            decryptedRequest = this.processJsonBody(request);
             filterChain.doFilter(decryptedRequest, response);
 
         } catch (Exception e) {
