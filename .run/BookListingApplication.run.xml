@@ -1,16 +1,38 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BookListingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
+      <env name="ACCESS_TOKEN_EXPIRATION" value="3600000" />
+      <env name="APPWRITE_POST_IMAGE_BUCKET" value="69c9e06200090f4b1452" />
+      <env name="APPWRITE_PROFILE_IMAGE_BUCKET" value="69c9e06200090f4b1452" />
+      <env name="APPWRITE_PROJECT_ID" value="69c9dfce000e9ff09099" />
+      <env name="APPWRITE_SECRET_KEY" value="standard_72491a825cafe501a392d6a81a3517f5c1b492a1c02b403f795b8eaaa6bfad1f27eedb96451b81725ccb33eb74de4724f6e9ac0fb271dd17b06bcd9de9db89b226f0b5d804576db4f40732ff30b13273a08aeb0bb6b1858d6309da2728188d885d58c297d5ab8c1a53e9f74eed39f20130868fa2fafd806e09eebbd948eb87b0" />
+      <env name="FRONTEND_URL" value="https://biblioo.vercel.app/" />
+      <env name="GOOGLE_BOOKS_API_KEY" value="AIzaSyBwWyoPfKLtQnjHet_-Tc9TkGoQe9upFy8" />
       <env name="JWT_SECRET" value="AOnNxT+Nn6XronoV6nEuIZDX0hl9jaDE0YdpayUZlGI=" />
       <env name="MONGO_DB_PASSWORD" value="keIQ3uoQMabaU8qv" />
       <env name="MONGO_DB_USERNAME" value="vinitman35" />
-      <env name="ACCESS_TOKEN_EXPIRATION" value="3600000" />
+      <env name="RECOMMEND_API_KEY" value="e42900db8484f68c1eeadb92404b21de44610f0430e29ad615125396dd52e14f" />
+      <env name="RECOMMEND_API_URL" value="https://biblio-recommend.onrender.com/api/v1" />
+      <env name="REDIS_AUTH_KEY" value="1YQghjSn2Q4GBrrjArukVIcenbRV0Fls" />
+      <env name="REDIS_AUTH_USERNAME" value="default" />
+      <env name="REDIS_PATH" value="redis-16695.crce281.ap-south-1-3.ec2.cloud.redislabs.com" />
+      <env name="REDIS_PORT" value="16695" />
       <env name="REFRESH_TOKEN_EXPIRATION" value="86400000" />
       <env name="TEST_ACCESS_TOKEN_EXPIRATION" value="60000" />
       <env name="TEST_REFRESH_TOKEN_EXPIRATION" value="300000" />
     </envs>
     <module name="BookListing" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="tech.biblio.BookListing.BookListingApplication" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+      </ENTRIES>
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

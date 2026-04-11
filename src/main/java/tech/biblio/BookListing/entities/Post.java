@@ -1,8 +1,7 @@
 package tech.biblio.BookListing.entities;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import com.mongodb.lang.Nullable;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 
 @Document("post")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Post {
     @Id
@@ -33,6 +34,15 @@ public class Post {
     private Book book;
 
     private String coverImage;
+
+    @Nullable
+    private PostVectorStatus vectorStatus;
+
+    @Nullable
+    private int retryCount;
+
+    @Nullable
+    private String vectorError;
 
     public void updateData(Post newPost) {
 

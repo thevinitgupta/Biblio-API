@@ -20,6 +20,7 @@ import tech.biblio.BookListing.entities.Post;
 import tech.biblio.BookListing.exceptions.BookUploadException;
 import tech.biblio.BookListing.exceptions.FileTypeNotAllowedException;
 import tech.biblio.BookListing.exceptions.UserNotFoundException;
+import tech.biblio.BookListing.external.queue.PostVectorQueue;
 import tech.biblio.BookListing.mappers.PostMapper;
 import tech.biblio.BookListing.repositories.PostRepository;
 import tech.biblio.BookListing.utils.Helper;
@@ -50,6 +51,9 @@ public class PostService {
 
     @Autowired
     private ReactionService reactionService;
+
+    @Autowired
+    private PostVectorQueue postVectorQueue;
 
     @Autowired
     private Helper helper;
@@ -100,6 +104,9 @@ public class PostService {
         user.getPosts().add(saved);
         System.out.println(user.toString());
         userService.updateUser(user);
+
+        // Vectorization of Post - NON BLOCKING
+        postVectorQueue.addPostIdToVectorQueue(saved.getSlug());
 
         return saved;
     }
